@@ -11,10 +11,6 @@ yarn-error.log
 .gitignore
 .gitmodules
 
-# Build output
-build/
-dist/
-
 # Environment files
 .env
 
