@@ -5,5 +5,3 @@ const App = () => {
 };
 
 export default App;
-
-//rnd_0Zvb1dSaMS6Hf8J8mfMaNap88xW0

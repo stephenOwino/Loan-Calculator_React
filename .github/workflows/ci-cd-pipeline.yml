@@ -13,7 +13,7 @@ jobs:
     steps:
       # Step 1: Checkout the code from GitHub
       - name: Checkout code
-        uses: actions/checkout@v2 # This action checks out the code from your GitHub repository
+        uses: actions/checkout@v2
 
       # Step 2: Set up Node.js (we're using Node.js 16 in this example)
       - name: Set up Node.js
@@ -23,16 +23,16 @@ jobs:
 
       # Step 3: Install dependencies
       - name: Install dependencies
-        run: npm install # Installs dependencies from package.json
+        run: npm install
 
       # Step 4: Build the app using Vite (or your build tool)
       - name: Build the app
-        run: npm run build # Runs npm run build, which should generate the 'dist' folder
+        run: npm run build
 
-      # Step 5: Build the Docker image
+      # Step 5: Build Docker image and tag it with your Docker Hub username
       - name: Build Docker image
         run: |
-          docker build -t my-react-app .
+          docker build -t otizaaa/my-react-app:latest .
 
       # Step 6: Log in to Docker Hub (you need to store your Docker credentials as secrets)
       - name: Log in to Docker Hub
@@ -41,12 +41,12 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }} # Docker Hub username stored in GitHub Secrets
           password: ${{ secrets.DOCKER_PASSWORD }} # Docker Hub password stored in GitHub Secrets
 
-      # Step 7: Push Docker image to Docker Hub (optional if you want to store the image there)
+      # Step 7: Push Docker image to Docker Hub
       - name: Push Docker image to Docker Hub
         run: |
-          docker push my-react-app
+          docker push otizaaa/my-react-app:latest
 
-      # Step 8: Deploy to Render (use the Render API to deploy)
+      # Step 8: Deploy to Render
       - name: Deploy to Render
         run: |
           curl -X POST https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploy \
