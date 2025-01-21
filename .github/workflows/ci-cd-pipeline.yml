@@ -1,0 +1,55 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - steve
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # Use the latest Ubuntu VM
+
+    steps:
+      # Step 1: Checkout the code from GitHub
+      - name: Checkout code
+        uses: actions/checkout@v2 # This action checks out the code from your GitHub repository
+
+      # Step 2: Set up Node.js (we're using Node.js 16 in this example)
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: "22"
+
+      # Step 3: Install dependencies
+      - name: Install dependencies
+        run: npm install # Installs dependencies from package.json
+
+      # Step 4: Build the app using Vite (or your build tool)
+      - name: Build the app
+        run: npm run build # Runs npm run build, which should generate the 'dist' folder
+
+      # Step 5: Build the Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t my-react-app .
+
+      # Step 6: Log in to Docker Hub (you need to store your Docker credentials as secrets)
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }} # Docker Hub username stored in GitHub Secrets
+          password: ${{ secrets.DOCKER_PASSWORD }} # Docker Hub password stored in GitHub Secrets
+
+      # Step 7: Push Docker image to Docker Hub (optional if you want to store the image there)
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker push my-react-app
+
+      # Step 8: Deploy to Render (use the Render API to deploy)
+      - name: Deploy to Render
+        run: |
+          curl -X POST https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploy \
+          -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+          -H "Content-Type: application/json" \
+          -d '{"branch": "main"}'
