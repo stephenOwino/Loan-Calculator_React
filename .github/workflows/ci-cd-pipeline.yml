@@ -32,7 +32,7 @@ jobs:
       # Step 5: Build Docker image and tag it with your Docker Hub username
       - name: Build Docker image
         run: |
-          docker build -t otizaaa/my-react-app:latest .
+          docker build -t otizaaa/Loan-Calculator-app:latest .
 
       # Step 6: Log in to Docker Hub (you need to store your Docker credentials as secrets)
       - name: Log in to Docker Hub
