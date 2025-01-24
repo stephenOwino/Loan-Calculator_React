@@ -5,6 +5,7 @@ import { reset, register } from "../slices/authSlice";
 import { toast } from "react-toastify";
 import SignupForm from "../Components/SignupForm";
 import { FaUser } from "react-icons/fa";
+import LoadingSpinner from "../spinner/LoadingSpinner";
 
 const SignupPage = () => {
 	const [formData, setFormData] = useState({
@@ -52,6 +53,9 @@ const SignupPage = () => {
 			dispatch(register(userData));
 		}
 	};
+	if (isLoading) {
+		return <LoadingSpinner />;
+	}
 
 	return (
 		<div className='flex items-center justify-center mt-10 px-4 sm:px-6 lg:px-8'>

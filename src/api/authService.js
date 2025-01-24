@@ -2,7 +2,7 @@ import axios from "axios";
 
 // Replace with your actual API base URL
 const API_BASE_URL =
-	"https://loan-calculator-4wyx.onrender.com/api/customers/register"; // Placeholder, replace with your API URL
+	"https://loan-calculator-springboot.onrender.com/api/customers/register"; // Placeholder, replace with your API URL
 
 const register = async (userData) => {
 	const response = await axios.post(`${API_BASE_URL}/users/register`, userData);
