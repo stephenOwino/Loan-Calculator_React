@@ -35,13 +35,22 @@ const SignupPage = () => {
 	const toastSuccessId = "toast-success-id";
 
 	useEffect(() => {
-		if (isError && !toast.isActive(toastErrorId)) {
-			toast.error(message, { toastId: toastErrorId });
+		if (isError) {
+			// Check if the error message is "Username already exists"
+			if (message === "Username already exists") {
+				toast.error("Username already exists, choose another one", {
+					toastId: toastErrorId,
+				});
+			} else if (!toast.isActive(toastErrorId)) {
+				toast.error(message, { toastId: toastErrorId });
+			}
 		}
+
 		if (isSuccess && !toast.isActive(toastSuccessId)) {
 			toast.success("Registration successful!", { toastId: toastSuccessId });
 			navigate("/");
 		}
+
 		dispatch(reset());
 	}, [user, isError, isSuccess, message, navigate, dispatch]);
 
