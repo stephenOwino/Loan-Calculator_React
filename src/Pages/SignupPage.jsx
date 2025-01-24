@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { reset, register } from "../slices/authSlice";
 import { toast } from "react-toastify";
 import SignupForm from "../Components/SignupForm";
+import { FaUser } from "react-icons/fa";
 
 const SignupPage = () => {
 	const [formData, setFormData] = useState({
@@ -55,7 +56,10 @@ const SignupPage = () => {
 	return (
 		<div className='flex items-center justify-center mt-10 px-4 sm:px-6 lg:px-8'>
 			<section className='flex flex-col items-center space-y-4 text-center p-6 bg-white shadow-xl rounded-2xl w-full max-w-md sm:max-w-lg'>
-				<h2 className='text-2xl font-bold'>Please create an account</h2>
+				<div className='flex items-center space-x-2'>
+					<FaUser className='text-2xl text-blue-500' />
+					<span className='text-lg font-semibold'>Register</span>
+				</div>
 				<SignupForm
 					formData={formData}
 					onChange={onChange}
