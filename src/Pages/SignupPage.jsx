@@ -35,19 +35,21 @@ const SignupPage = () => {
 	const toastSuccessId = "toast-success-id";
 
 	useEffect(() => {
-		if (isError) {
+		// Only show error toast if registration fails after form submission
+		if (isError && message && !toast.isActive(toastErrorId)) {
 			// Check if the error message is "Username already exists"
 			if (message === "Username already exists") {
 				toast.error("Username already exists, choose another one", {
 					toastId: toastErrorId,
 				});
-			} else if (!toast.isActive(toastErrorId)) {
+			} else {
 				toast.error(message || "An error occurred, please try again.", {
 					toastId: toastErrorId,
 				});
 			}
 		}
 
+		// Show success toast only if registration is successful after form submission
 		if (isSuccess && !toast.isActive(toastSuccessId)) {
 			toast.success("Registration successful!", { toastId: toastSuccessId });
 
@@ -62,9 +64,10 @@ const SignupPage = () => {
 			});
 			localStorage.removeItem("formData");
 
-			navigate("/");
+			navigate("/"); // Redirect after successful registration
 		}
 
+		// Reset the auth state after handling success/error
 		dispatch(reset());
 	}, [user, isError, isSuccess, message, navigate, dispatch]);
 
@@ -78,16 +81,36 @@ const SignupPage = () => {
 		localStorage.setItem("formData", JSON.stringify(updatedFormData)); // Save to localStorage
 	};
 
+	// Prevent form submission if the form is invalid
 	const onSubmit = (e) => {
 		e.preventDefault();
+
+		// Check if form is empty
+		if (
+			!firstName ||
+			!lastName ||
+			!username ||
+			!email ||
+			!password ||
+			!confirmPassword
+		) {
+			if (!toast.isActive(toastErrorId)) {
+				toast.error("Please fill in all fields.", { toastId: toastErrorId });
+			}
+			return; // Prevent form submission
+		}
+
+		// Check if passwords match
 		if (password !== confirmPassword) {
 			if (!toast.isActive(toastErrorId)) {
 				toast.error("Passwords do not match!", { toastId: toastErrorId });
 			}
-		} else {
-			const userData = { firstName, lastName, username, email, password };
-			dispatch(register(userData));
+			return; // Prevent form submission
 		}
+
+		// If all validations pass, dispatch register
+		const userData = { firstName, lastName, username, email, password };
+		dispatch(register(userData));
 	};
 
 	if (isLoading) {
