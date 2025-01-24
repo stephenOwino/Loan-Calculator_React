@@ -11,6 +11,7 @@ const SignupPage = () => {
 	const [formData, setFormData] = useState({
 		firstName: "",
 		lastName: "",
+		username: "",
 		email: "",
 		password: "",
 		confirmPassword: "",
@@ -19,7 +20,7 @@ const SignupPage = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	const { firstName, lastName, email, password, confirmPassword, role, bio } =
+	const { firstName, lastName, username, email, password, confirmPassword } =
 		formData;
 
 	const { user, isLoading, isError, isSuccess, message } = useSelector(
