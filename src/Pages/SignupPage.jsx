@@ -50,10 +50,11 @@ const SignupPage = () => {
 		if (password !== confirmPassword) {
 			toast.error("Passwords do not match!");
 		} else {
-			const userData = { firstName, lastName, email, password, role, bio };
+			const userData = { firstName, lastName, username, email, password };
 			dispatch(register(userData));
 		}
 	};
+
 	if (isLoading) {
 		return <LoadingSpinner />;
 	}

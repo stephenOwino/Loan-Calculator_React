@@ -58,6 +58,7 @@ const SignupForm = ({ formData, onChange, onSubmit, isLoading }) => {
 					className='border rounded-md p-2 w-full'
 				/>
 			</div>
+
 			{/* Email */}
 			<div className='flex flex-col w-full'>
 				<label htmlFor='email' className='text-left mb-2'>
@@ -99,6 +100,7 @@ const SignupForm = ({ formData, onChange, onSubmit, isLoading }) => {
 					</div>
 				</div>
 			</div>
+
 			{/* Confirm Password */}
 			<div className='flex flex-col w-full'>
 				<label htmlFor='confirmPassword' className='text-left mb-2'>
@@ -108,7 +110,7 @@ const SignupForm = ({ formData, onChange, onSubmit, isLoading }) => {
 					<input
 						type={showConfirmPassword ? "text" : "password"}
 						name='confirmPassword'
-						id='confirmPassword' // Adding the id to the input for better accessibility
+						id='confirmPassword'
 						placeholder='Enter your password again...'
 						value={formData.confirmPassword}
 						onChange={onChange}
