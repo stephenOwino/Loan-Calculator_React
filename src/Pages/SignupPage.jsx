@@ -42,12 +42,26 @@ const SignupPage = () => {
 					toastId: toastErrorId,
 				});
 			} else if (!toast.isActive(toastErrorId)) {
-				toast.error(message, { toastId: toastErrorId });
+				toast.error(message || "An error occurred, please try again.", {
+					toastId: toastErrorId,
+				});
 			}
 		}
 
 		if (isSuccess && !toast.isActive(toastSuccessId)) {
 			toast.success("Registration successful!", { toastId: toastSuccessId });
+
+			// Clear form data and localStorage on success
+			setFormData({
+				firstName: "",
+				lastName: "",
+				username: "",
+				email: "",
+				password: "",
+				confirmPassword: "",
+			});
+			localStorage.removeItem("formData");
+
 			navigate("/");
 		}
 

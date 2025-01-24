@@ -4,15 +4,23 @@ import axios from "axios";
 const API_BASE_URL = "https://loan-calculator-springboot.onrender.com/api"; // Placeholder, replace with your API URL
 
 const register = async (userData) => {
-	const response = await axios.post(
-		`${API_BASE_URL}/customers/register`,
-		userData
-	);
-
-	if (response.data) {
-		localStorage.setItem("user", JSON.stringify(response.data));
+	try {
+		const response = await axios.post(
+			`${API_BASE_URL}/customers/register`,
+			userData
+		);
+		if (response.data) {
+			localStorage.setItem("user", JSON.stringify(response.data));
+		}
+		return response.data;
+	} catch (error) {
+		// Check for a response error and return the error message
+		if (error.response && error.response.data) {
+			throw new Error(error.response.data); // Pass the error message
+		} else {
+			throw new Error("An unknown error occurred.");
+		}
 	}
-	return response.data;
 };
 
 const login = async (userData) => {

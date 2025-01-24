@@ -1,5 +1,6 @@
 import React from "react";
 import SignupPage from "./Pages/SignupPage";
+import HomePage from "./Pages/HomePage";
 
 import {
 	BrowserRouter as Router,
@@ -13,6 +14,7 @@ const App = () => {
 	return (
 		<Router>
 			<Routes>
+				<Route path='/' element={<HomePage />} />
 				<Route path='/signup' element={<SignupPage />} />
 				<Route path='/' element={<Navigate to='/signup' replace />} />
 			</Routes>
