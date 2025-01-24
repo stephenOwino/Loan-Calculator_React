@@ -130,6 +130,7 @@ const SignupPage = () => {
 					onSubmit={onSubmit}
 					isLoading={isLoading}
 				/>
+				
 			</section>
 		</div>
 	);

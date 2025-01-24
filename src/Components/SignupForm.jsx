@@ -139,6 +139,14 @@ const SignupForm = ({ formData, onChange, onSubmit, isLoading }) => {
 					{isLoading ? "Loading..." : "Submit"}
 				</button>
 			</div>
+
+			{/* Login Link */}
+			<p className='text-sm text-gray-600 text-center'>
+				Already have an account?{" "}
+				<a href='/login' className='text-blue-600 hover:underline'>
+					Login
+				</a>
+			</p>
 		</form>
 	);
 };
