@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const SignupForm = ({ formData, onChange, onSubmit, isLoading }) => {
 	const [showPassword, setShowPassword] = useState(false);
@@ -141,12 +142,14 @@ const SignupForm = ({ formData, onChange, onSubmit, isLoading }) => {
 			</div>
 
 			{/* Login Link */}
-			<p className='text-sm text-gray-600 text-center'>
-				Already have an account?{" "}
-				<a href='/login' className='text-blue-600 hover:underline'>
-					Login
-				</a>
-			</p>
+			<div className='flex justify-end mt-6'>
+				<p className='text-sm text-gray-600'>
+					Already have an account?{" "}
+					<Link to='/login' className='text-blue-600 hover:underline'>
+						Login
+					</Link>
+				</p>
+			</div>
 		</form>
 	);
 };
