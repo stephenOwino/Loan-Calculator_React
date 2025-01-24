@@ -8,18 +8,22 @@ import { FaUser } from "react-icons/fa";
 import LoadingSpinner from "../spinner/LoadingSpinner";
 
 const SignupPage = () => {
-	const [formData, setFormData] = useState({
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
+	// Retrieve form data from localStorage or set defaults
+	const storedFormData = JSON.parse(localStorage.getItem("formData")) || {
 		firstName: "",
 		lastName: "",
 		username: "",
 		email: "",
 		password: "",
 		confirmPassword: "",
-	});
+	};
 
-	const navigate = useNavigate();
-	const dispatch = useDispatch();
+	const [formData, setFormData] = useState(storedFormData);
 
+	// Destructure formData for easier access
 	const { firstName, lastName, username, email, password, confirmPassword } =
 		formData;
 
@@ -35,21 +39,22 @@ const SignupPage = () => {
 			toast.success("Registration successful!", { toastId: toastSuccessId });
 			navigate("/");
 		}
-		// Reset the auth state to avoid triggering this logic repeatedly
 		dispatch(reset());
 	}, [user, isError, isSuccess, message, navigate, dispatch]);
 
+	// Update formData and save to localStorage
 	const onChange = (e) => {
-		setFormData((prevState) => ({
-			...prevState,
+		const updatedFormData = {
+			...formData,
 			[e.target.name]: e.target.value,
-		}));
+		};
+		setFormData(updatedFormData);
+		localStorage.setItem("formData", JSON.stringify(updatedFormData)); // Save to localStorage
 	};
 
 	const onSubmit = (e) => {
 		e.preventDefault();
 		if (password !== confirmPassword) {
-			// Prevent multiple password mismatch toasts
 			if (!toast.isActive(toastErrorId)) {
 				toast.error("Passwords do not match!", { toastId: toastErrorId });
 			}

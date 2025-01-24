@@ -45,6 +45,7 @@ const SignupForm = ({ formData, onChange, onSubmit, isLoading }) => {
 				/>
 			</div>
 
+			{/* Username */}
 			<div className='flex flex-col w-full'>
 				<label htmlFor='username' className='text-left mb-2'>
 					Username
