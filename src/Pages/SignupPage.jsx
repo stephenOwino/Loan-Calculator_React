@@ -27,14 +27,19 @@ const SignupPage = () => {
 		(state) => state.auth
 	);
 
+	// Toast IDs to prevent duplicate messages
+	const toastErrorId = "toastError";
+	const toastSuccessId = "toastSuccess";
+
 	useEffect(() => {
-		if (isError) {
-			toast.error(message);
+		if (isError && !toast.isActive(toastErrorId)) {
+			toast.error(message, { toastId: toastErrorId });
 		}
-		if (isSuccess || user) {
-			toast.success("Registration successful!");
+		if (isSuccess && !toast.isActive(toastSuccessId)) {
+			toast.success("Registration successful!", { toastId: toastSuccessId });
 			navigate("/");
 		}
+		// Reset the auth state to avoid triggering this logic repeatedly
 		dispatch(reset());
 	}, [user, isError, isSuccess, message, navigate, dispatch]);
 
@@ -48,7 +53,10 @@ const SignupPage = () => {
 	const onSubmit = (e) => {
 		e.preventDefault();
 		if (password !== confirmPassword) {
-			toast.error("Passwords do not match!");
+			// Prevent multiple password mismatch toasts
+			if (!toast.isActive(toastErrorId)) {
+				toast.error("Passwords do not match!", { toastId: toastErrorId });
+			}
 		} else {
 			const userData = { firstName, lastName, username, email, password };
 			dispatch(register(userData));
