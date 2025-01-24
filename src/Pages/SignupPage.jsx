@@ -27,10 +27,6 @@ const SignupPage = () => {
 		(state) => state.auth
 	);
 
-	// Toast IDs to prevent duplicate messages
-	const toastErrorId = "toastError";
-	const toastSuccessId = "toastSuccess";
-
 	useEffect(() => {
 		if (isError && !toast.isActive(toastErrorId)) {
 			toast.error(message, { toastId: toastErrorId });
