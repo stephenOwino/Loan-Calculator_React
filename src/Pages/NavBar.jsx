@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
 import {
 	FaHome,
@@ -20,9 +20,22 @@ import { Link } from "react-router-dom";
 const Navbar = () => {
 	const [isSidebarOpen, setSidebarOpen] = useState(false);
 	const [searchQuery, setSearchQuery] = useState("");
+	const [isLoggingOut, setIsLoggingOut] = useState(false); // New state for loading
 	const dispatch = useDispatch();
-	const { user } = useSelector((state) => state.auth); // Accessing user from the Redux state
+	const { user } = useSelector((state) => state.auth);
 	const navigate = useNavigate();
+
+	useEffect(() => {
+		const handleResize = () => {
+			if (window.innerWidth >= 1024) {
+				setSidebarOpen(false); // Close the sidebar when screen width is large enough
+			}
+		};
+
+		window.addEventListener("resize", handleResize);
+
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
 
 	const toggleSidebar = () => {
 		setSidebarOpen(!isSidebarOpen);
@@ -33,9 +46,11 @@ const Navbar = () => {
 	};
 
 	const handleLogout = () => {
+		setIsLoggingOut(true); // Show loading spinner
 		dispatch(logout());
 		dispatch(reset());
 		navigate("/"); // Redirecting to home page after logout
+		setIsLoggingOut(false); // Hide spinner after logout is complete
 	};
 
 	return (
@@ -103,7 +118,7 @@ const Navbar = () => {
 						</>
 					) : (
 						<Link
-							to='#logout'
+							to='/logout'
 							className='flex items-center hover:underline'
 							onClick={handleLogout}
 						>
@@ -119,14 +134,25 @@ const Navbar = () => {
 				/>
 			</header>
 
+			{/* Loading Spinner */}
+			{isLoggingOut && (
+				<div className='fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50'>
+					<div className='animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-solid'></div>
+				</div>
+			)}
+
 			{/* Sidebar for Small Screens */}
-			<Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+			<Sidebar
+				isOpen={isSidebarOpen}
+				toggleSidebar={toggleSidebar}
+				handleLogout={handleLogout}
+			/>
 		</div>
 	);
 };
 
-const Sidebar = ({ isOpen, toggleSidebar }) => {
-	const { user } = useSelector((state) => state.auth); // Accessing user from the Redux state
+const Sidebar = ({ isOpen, toggleSidebar, handleLogout }) => {
+	const { user } = useSelector((state) => state.auth);
 
 	return (
 		<div
@@ -169,8 +195,15 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 					<Link to='#contact-us' className='flex items-center hover:underline'>
 						<FaPhone className='mr-2' /> Contact Us
 					</Link>
-					{/* Conditionally render login/register/logout in sidebar */}
-					{!user ? (
+					{user ? (
+						<Link
+							to='#logout'
+							className='flex items-center hover:underline'
+							onClick={handleLogout}
+						>
+							<FaSignOutAlt className='mr-2' /> Logout
+						</Link>
+					) : (
 						<>
 							<Link
 								to='/register'
@@ -182,14 +215,6 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 								<FaSignInAlt className='mr-2' /> Login
 							</Link>
 						</>
-					) : (
-						<Link
-							to='#logout'
-							className='flex items-center hover:underline'
-							onClick={handleLogout}
-						>
-							<FaSignOutAlt className='mr-2' /> Logout
-						</Link>
 					)}
 				</nav>
 			</div>
