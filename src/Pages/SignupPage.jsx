@@ -118,7 +118,7 @@ const SignupPage = () => {
 	}
 
 	return (
-		<div className='flex items-center justify-center mt-10 px-4 sm:px-6 lg:px-8'>
+		<div className='flex items-center justify-center px-4 sm:px-6 lg:px-8 mt-40'>
 			<section className='flex flex-col items-center space-y-4 text-center p-6 bg-white shadow-xl rounded-2xl w-full max-w-md sm:max-w-lg'>
 				<div className='flex items-center space-x-2'>
 					<FaUser className='text-2xl text-blue-500' />
@@ -130,7 +130,6 @@ const SignupPage = () => {
 					onSubmit={onSubmit}
 					isLoading={isLoading}
 				/>
-				
 			</section>
 		</div>
 	);

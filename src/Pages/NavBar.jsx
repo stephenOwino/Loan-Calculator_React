@@ -12,10 +12,17 @@ import {
 	FaSignOutAlt,
 	FaSearch,
 } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { reset, logout } from "../slices/authSlice";
+import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
 	const [isSidebarOpen, setSidebarOpen] = useState(false);
 	const [searchQuery, setSearchQuery] = useState("");
+	const dispatch = useDispatch();
+	const { user } = useSelector((state) => state.auth); // Accessing user from the Redux state
+	const navigate = useNavigate();
 
 	const toggleSidebar = () => {
 		setSidebarOpen(!isSidebarOpen);
@@ -25,10 +32,16 @@ const Navbar = () => {
 		setSearchQuery(event.target.value);
 	};
 
+	const handleLogout = () => {
+		dispatch(logout());
+		dispatch(reset());
+		navigate("/"); // Redirecting to home page after logout
+	};
+
 	return (
 		<div>
 			{/* Navbar */}
-			<header className='w-full bg-blue-500 text-white flex flex-col lg:flex-row items-center justify-between px-6 py-4 lg:py-6'>
+			<header className='w-full bg-blue-500 text-white flex flex-col lg:flex-row items-center justify-between px-6 py-4 lg:py-6 fixed top-0 left-0 right-0 z-50 mb-80'>
 				<h1 className='text-lg font-bold mb-4 lg:mb-0'>Loan Calculator</h1>
 
 				{/* Search Bar */}
@@ -47,42 +60,56 @@ const Navbar = () => {
 
 				{/* Large Screen Links */}
 				<div className='hidden lg:flex flex-wrap space-x-6 items-center ml-6 mt-4 lg:mt-0'>
-					<a href='#home' className='flex items-center hover:underline'>
+					<Link to='/' className='flex items-center hover:underline'>
 						<FaHome className='mr-2' /> Home
-					</a>
-					<a
-						href='#loan-calculator'
+					</Link>
+					<Link
+						to='/loan-calculator'
 						className='flex items-center hover:underline'
 					>
 						<FaCalculator className='mr-2' /> Loan Calculator
-					</a>
-					<a
-						href='#loan-application'
+					</Link>
+					<Link
+						to='#loan-application'
 						className='flex items-center hover:underline'
 					>
 						<FaFileAlt className='mr-2' /> Loan Application
-					</a>
-					<a href='#my-account' className='flex items-center hover:underline'>
+					</Link>
+					<Link to='#my-account' className='flex items-center hover:underline'>
 						<FaUserAlt className='mr-2' /> My Account
-					</a>
-					<a href='#about-us' className='flex items-center hover:underline'>
+					</Link>
+					<Link to='#about-us' className='flex items-center hover:underline'>
 						<FaInfoCircle className='mr-2' /> About Us
-					</a>
-					<a href='#faqs' className='flex items-center hover:underline'>
+					</Link>
+					<Link to='#faqs' className='flex items-center hover:underline'>
 						<FaQuestionCircle className='mr-2' /> FAQs
-					</a>
-					<a href='#contact-us' className='flex items-center hover:underline'>
+					</Link>
+					<Link to='#contact-us' className='flex items-center hover:underline'>
 						<FaPhone className='mr-2' /> Contact Us
-					</a>
-					<a href='#register' className='flex items-center hover:underline'>
-						<FaSignInAlt className='mr-2' /> Register
-					</a>
-					<a href='#login' className='flex items-center hover:underline'>
-						<FaSignInAlt className='mr-2' /> Login
-					</a>
-					<a href='#logout' className='flex items-center hover:underline'>
-						<FaSignOutAlt className='mr-2' /> Logout
-					</a>
+					</Link>
+
+					{/* Conditionally render buttons based on user authentication */}
+					{!user ? (
+						<>
+							<Link
+								to='/register'
+								className='flex items-center hover:underline'
+							>
+								<FaSignInAlt className='mr-2' /> Register
+							</Link>
+							<Link to='/login' className='flex items-center hover:underline'>
+								<FaSignInAlt className='mr-2' /> Login
+							</Link>
+						</>
+					) : (
+						<Link
+							to='#logout'
+							className='flex items-center hover:underline'
+							onClick={handleLogout}
+						>
+							<FaSignOutAlt className='mr-2' /> Logout
+						</Link>
+					)}
 				</div>
 
 				{/* Small Screen Sidebar Toggle */}
@@ -99,6 +126,8 @@ const Navbar = () => {
 };
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
+	const { user } = useSelector((state) => state.auth); // Accessing user from the Redux state
+
 	return (
 		<div
 			className={`fixed top-0 right-0 h-full bg-blue-500 w-64 transform ${
@@ -113,42 +142,55 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 					onClick={toggleSidebar}
 				/>
 				<nav className='space-y-4'>
-					<a href='#home' className='flex items-center  hover:underline'>
+					<Link to='/' className='flex items-center hover:underline'>
 						<FaHome className='mr-2' /> Home
-					</a>
-					<a
-						href='#loan-calculator'
+					</Link>
+					<Link
+						to='#loan-calculator'
 						className='flex items-center hover:underline'
 					>
 						<FaCalculator className='mr-2' /> Loan Calculator
-					</a>
-					<a
-						href='#loan-application'
+					</Link>
+					<Link
+						to='#loan-application'
 						className='flex items-center hover:underline'
 					>
 						<FaFileAlt className='mr-2' /> Loan Application
-					</a>
-					<a href='#my-account' className='flex items-center hover:underline'>
+					</Link>
+					<Link to='#my-account' className='flex items-center hover:underline'>
 						<FaUserAlt className='mr-2' /> My Account
-					</a>
-					<a href='#about-us' className='flex items-center hover:underline'>
+					</Link>
+					<Link to='#about-us' className='flex items-center hover:underline'>
 						<FaInfoCircle className='mr-2' /> About Us
-					</a>
-					<a href='#faqs' className='flex items-center hover:underline'>
+					</Link>
+					<Link to='#faqs' className='flex items-center hover:underline'>
 						<FaQuestionCircle className='mr-2' /> FAQs
-					</a>
-					<a href='#contact-us' className='flex items-center hover:underline'>
+					</Link>
+					<Link to='#contact-us' className='flex items-center hover:underline'>
 						<FaPhone className='mr-2' /> Contact Us
-					</a>
-					<a href='#register' className='flex items-center hover:underline'>
-						<FaSignInAlt className='mr-2' /> Register
-					</a>
-					<a href='#login' className='flex items-center hover:underline'>
-						<FaSignInAlt className='mr-2' /> Login
-					</a>
-					<a href='#logout' className='flex items-center hover:underline'>
-						<FaSignOutAlt className='mr-2' /> Logout
-					</a>
+					</Link>
+					{/* Conditionally render login/register/logout in sidebar */}
+					{!user ? (
+						<>
+							<Link
+								to='/register'
+								className='flex items-center hover:underline'
+							>
+								<FaSignInAlt className='mr-2' /> Register
+							</Link>
+							<Link to='/login' className='flex items-center hover:underline'>
+								<FaSignInAlt className='mr-2' /> Login
+							</Link>
+						</>
+					) : (
+						<Link
+							to='#logout'
+							className='flex items-center hover:underline'
+							onClick={handleLogout}
+						>
+							<FaSignOutAlt className='mr-2' /> Logout
+						</Link>
+					)}
 				</nav>
 			</div>
 		</div>

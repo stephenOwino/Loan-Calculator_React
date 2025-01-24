@@ -1,5 +1,6 @@
 import { useState } from "react";
 import LoginForm from "../Components/Login";
+import { FaUserAlt } from "react-icons/fa";
 
 const LoginPage = () => {
 	const [message, setMessage] = useState("");
@@ -18,6 +19,7 @@ const LoginPage = () => {
 			<section className='bg-white shadow-lg rounded-lg p-8 w-full max-w-md sm:max-w-lg'>
 				{/* Header */}
 				<div className='flex items-center justify-center space-x-2 mb-6'>
+					<FaUserAlt className='text-blue-500 mr-2' />
 					<h1 className='text-2xl font-semibold text-gray-700'>Login</h1>
 				</div>
 
