@@ -23,13 +23,16 @@ const SignupPage = () => {
 
 	const [formData, setFormData] = useState(storedFormData);
 
-	// Destructure formData for easier access
 	const { firstName, lastName, username, email, password, confirmPassword } =
 		formData;
 
 	const { user, isLoading, isError, isSuccess, message } = useSelector(
 		(state) => state.auth
 	);
+
+	// Define toast IDs to prevent duplicate toasts
+	const toastErrorId = "toast-error-id";
+	const toastSuccessId = "toast-success-id";
 
 	useEffect(() => {
 		if (isError && !toast.isActive(toastErrorId)) {
