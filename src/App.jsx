@@ -15,7 +15,7 @@ const App = () => {
 		<Router>
 			<Routes>
 				<Route path='/' element={<HomePage />} />
-				<Route path='/signup' element={<SignupPage />} />
+				<Route path='/register' element={<SignupPage />} />
 				<Route path='/' element={<Navigate to='/signup' replace />} />
 			</Routes>
 			<ToastContainer />
