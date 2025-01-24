@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { register, reset } from "../authSlice/authSlice";
+import { reset, register } from "../slices/authSlice";
 import { toast } from "react-toastify";
-import SignupForm from "../components/SignupForm";
+import SignupForm from "../Components/SignupForm";
 
 const SignupPage = () => {
 	const [formData, setFormData] = useState({
@@ -12,8 +12,6 @@ const SignupPage = () => {
 		email: "",
 		password: "",
 		confirmPassword: "",
-		role: "",
-		bio: "",
 	});
 
 	const navigate = useNavigate();
