@@ -86,14 +86,29 @@ export const authSlice = createSlice({
 				state.isError = true;
 				state.message = action.payload;
 				state.user = null;
+			})
+			.addCase(logout.fulfilled, (state) => {
+				state.user = null;
+				state.isSuccess = false;
+				state.isError = false;
+				state.message = "";
 			});
 	},
 });
 
 //LOGOUT
-
-export const logout = createAsyncThunk("auth/logout", async () => {
-	await authService.logout();
+// LOGOUT
+export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
+	try {
+		await authService.logout();
+		return true; // You can return anything to signal the action was successful
+	} catch (error) {
+		const message =
+			(error.response && error.response.data && error.response.data.message) ||
+			error.message ||
+			error.toString();
+		return thunkAPI.rejectWithValue(message);
+	}
 });
 
 export const { reset } = authSlice.actions;

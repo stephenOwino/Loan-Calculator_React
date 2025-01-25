@@ -56,7 +56,7 @@ const Navbar = () => {
 	return (
 		<div>
 			{/* Navbar */}
-			<header className='w-full bg-blue-500 text-white flex flex-col lg:flex-row items-center justify-between px-6 py-4 lg:py-6 fixed top-0 left-0 right-0 z-50 mb-80'>
+			<header className='w-full bg-blue-500 text-white flex flex-col lg:flex-row items-center justify-between px-6 py-4 lg:py-6 fixed top-0 left-0 right-0 z-50'>
 				<h1 className='text-lg font-bold mb-4 lg:mb-0'>Loan Calculator</h1>
 
 				{/* Search Bar */}
@@ -78,16 +78,10 @@ const Navbar = () => {
 					<Link to='/' className='flex items-center hover:underline'>
 						<FaHome className='mr-2' /> Home
 					</Link>
-					<Link
-						to='/loan-calculator'
-						className='flex items-center hover:underline'
-					>
+					<Link to='/calculator' className='flex items-center hover:underline'>
 						<FaCalculator className='mr-2' /> Loan Calculator
 					</Link>
-					<Link
-						to='#loan-application'
-						className='flex items-center hover:underline'
-					>
+					<Link to='/form' className='flex items-center hover:underline'>
 						<FaFileAlt className='mr-2' /> Loan Application
 					</Link>
 					<Link to='#my-account' className='flex items-center hover:underline'>
@@ -104,7 +98,15 @@ const Navbar = () => {
 					</Link>
 
 					{/* Conditionally render buttons based on user authentication */}
-					{!user ? (
+					{user ? (
+						<Link
+							to='/logout'
+							className='flex items-center hover:underline'
+							onClick={onLogout}
+						>
+							<FaSignOutAlt className='mr-2' /> Logout
+						</Link>
+					) : (
 						<>
 							<Link
 								to='/register'
@@ -116,14 +118,6 @@ const Navbar = () => {
 								<FaSignInAlt className='mr-2' /> Login
 							</Link>
 						</>
-					) : (
-						<Link
-							to='/logout'
-							className='flex items-center hover:underline'
-							onClick={onLogout}
-						>
-							<FaSignOutAlt className='mr-2' /> Logout
-						</Link>
 					)}
 				</div>
 
@@ -145,7 +139,7 @@ const Navbar = () => {
 			<Sidebar
 				isOpen={isSidebarOpen}
 				toggleSidebar={toggleSidebar}
-				handleLogout={onLogout}
+				onLogout={onLogout}
 			/>
 		</div>
 	);
@@ -171,10 +165,7 @@ const Sidebar = ({ isOpen, toggleSidebar, onLogout }) => {
 					<Link to='/' className='flex items-center hover:underline'>
 						<FaHome className='mr-2' /> Home
 					</Link>
-					<Link
-						to='#loan-calculator'
-						className='flex items-center hover:underline'
-					>
+					<Link to='/calculator' className='flex items-center hover:underline'>
 						<FaCalculator className='mr-2' /> Loan Calculator
 					</Link>
 					<Link
@@ -197,7 +188,7 @@ const Sidebar = ({ isOpen, toggleSidebar, onLogout }) => {
 					</Link>
 					{user ? (
 						<Link
-							to='#logout'
+							to='/logout'
 							className='flex items-center hover:underline'
 							onClick={onLogout}
 						>
