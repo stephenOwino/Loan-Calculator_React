@@ -28,5 +28,5 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 # Step 10: Expose the necessary port
 EXPOSE 80
 
-# Step 11: Run Nginx to serve the app
+# Step 11: Run Nginx to serve the app ...
 CMD ["nginx", "-g", "daemon off;"]
