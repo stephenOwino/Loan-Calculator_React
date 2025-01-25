@@ -7,9 +7,15 @@ const API_BASE_URL =
 // Apply for a loan
 const applyForLoan = async (loanData, customerId) => {
 	try {
+		const token = localStorage.getItem("token"); // Assuming the token is stored in localStorage
 		const response = await axios.post(
 			`${API_BASE_URL}/${customerId}`,
-			loanData
+			loanData,
+			{
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			}
 		);
 		return response.data;
 	} catch (error) {

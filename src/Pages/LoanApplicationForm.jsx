@@ -26,6 +26,7 @@ const LoanApplicationForm = () => {
 	const loading = useSelector((state) => state.loan.loading);
 	const error = useSelector((state) => state.loan.error);
 	const appliedLoan = useSelector((state) => state.loan.appliedLoan);
+	const { user } = useSelector((state) => state.auth); // Assuming user info is stored in auth slice
 
 	const [formData, setFormData] = useState({
 		fullName: "",
@@ -133,7 +134,7 @@ const LoanApplicationForm = () => {
 		}
 
 		try {
-			const customerId = 1; // Replace with actual customer ID
+			const customerId = user.id; // Assuming user ID is stored in user object
 			dispatch(updateLoanData(formData));
 			await dispatch(applyForLoan({ loanData: formData, customerId }));
 
