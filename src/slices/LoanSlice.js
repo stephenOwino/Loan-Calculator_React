@@ -1,10 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import LoanService from "../api/LoanService";
 
 const initialState = {
 	loanData: {
+		fullName: "",
+		email: "",
+		phoneNumber: "",
 		amount: "",
-		interestRate: "",
 		loanTerm: "",
 	},
 	loading: false,
@@ -17,9 +19,8 @@ export const applyForLoan = createAsyncThunk(
 	"loan/apply",
 	async (loanData, thunkAPI) => {
 		try {
-			// Replace with your backend API call to apply for a loan
-			const response = await axios.post("/api/loans", loanData);
-			return response.data;
+			const response = await LoanService.applyForLoan(loanData);
+			return response;
 		} catch (error) {
 			const message =
 				(error.response &&
@@ -53,11 +54,11 @@ const loanSlice = createSlice({
 			})
 			.addCase(applyForLoan.fulfilled, (state, action) => {
 				state.loading = false;
-				state.appliedLoan = action.payload; // Storing the applied loan data from response
+				state.appliedLoan = action.payload;
 			})
 			.addCase(applyForLoan.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.payload; // Storing error message
+				state.error = action.payload;
 			});
 	},
 });

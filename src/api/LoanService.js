@@ -8,13 +8,12 @@ const API_BASE_URL =
 const applyForLoan = async (loanData) => {
 	try {
 		const response = await axios.post(API_BASE_URL, loanData);
-		return response.data; // Return the response data to be handled in the slice
+		return response.data;
 	} catch (error) {
-		// Handle errors and return the error message for Redux
 		if (error.response && error.response.data) {
-			return error.response.data.message || "Loan application failed";
+			throw new Error(error.response.data.message || "Loan application failed");
 		} else {
-			return "An unknown error occurred.";
+			throw new Error("An unknown error occurred.");
 		}
 	}
 };

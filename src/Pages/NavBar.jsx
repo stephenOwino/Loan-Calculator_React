@@ -81,7 +81,7 @@ const Navbar = () => {
 					<Link to='/calculator' className='flex items-center hover:underline'>
 						<FaCalculator className='mr-2' /> Loan Calculator
 					</Link>
-					<Link to='/form' className='flex items-center hover:underline'>
+					<Link to='/loan' className='flex items-center hover:underline'>
 						<FaFileAlt className='mr-2' /> Loan Application
 					</Link>
 					<Link to='#my-account' className='flex items-center hover:underline'>
@@ -168,10 +168,7 @@ const Sidebar = ({ isOpen, toggleSidebar, onLogout }) => {
 					<Link to='/calculator' className='flex items-center hover:underline'>
 						<FaCalculator className='mr-2' /> Loan Calculator
 					</Link>
-					<Link
-						to='#loan-application'
-						className='flex items-center hover:underline'
-					>
+					<Link to='/loan' className='flex items-center hover:underline'>
 						<FaFileAlt className='mr-2' /> Loan Application
 					</Link>
 					<Link to='#my-account' className='flex items-center hover:underline'>

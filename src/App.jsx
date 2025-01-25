@@ -17,7 +17,7 @@ const App = () => {
 				<Route path='/register' element={<SignupPage />} />
 				<Route path='/login' element={<LoginPage />} />
 				<Route path='/calculator' element={<LoanCalculator />} />
-				<Route path='/form' element={<LoanApplicationForm />} />
+				<Route path='/loan' element={<LoanApplicationForm />} />
 			</Routes>
 			<ToastContainer />
 		</Router>
