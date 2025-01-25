@@ -5,9 +5,12 @@ const API_BASE_URL =
 	"https://loan-calculator-springboot.onrender.com/api/loans";
 
 // Apply for a loan
-const applyForLoan = async (loanData) => {
+const applyForLoan = async (loanData, customerId) => {
 	try {
-		const response = await axios.post(API_BASE_URL, loanData);
+		const response = await axios.post(
+			`${API_BASE_URL}/${customerId}`,
+			loanData
+		);
 		return response.data;
 	} catch (error) {
 		if (error.response && error.response.data) {

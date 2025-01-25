@@ -57,10 +57,16 @@ const Navbar = () => {
 		<div>
 			{/* Navbar */}
 			<header className='w-full bg-blue-500 text-white flex flex-col lg:flex-row items-center justify-between px-6 py-4 lg:py-6 fixed top-0 left-0 right-0 z-50'>
-				<h1 className='text-lg font-bold mb-4 lg:mb-0'>Loan Calculator</h1>
+				<div className='flex items-center justify-between w-full lg:w-auto'>
+					<h1 className='text-lg font-bold'>Loan Calculator</h1>
+					<Bars3Icon
+						className='h-8 w-8 cursor-pointer lg:hidden'
+						onClick={toggleSidebar}
+					/>
+				</div>
 
 				{/* Search Bar */}
-				<div className='relative flex items-center w-full lg:w-auto mt-4 lg:mt-0'>
+				<div className='relative flex items-center w-full lg:w-auto mt-4 lg:mt-0 lg:ml-6'>
 					<input
 						type='text'
 						className='flex flex-row w-full lg:w-96 p-2 rounded-l-md text-black'
@@ -74,7 +80,7 @@ const Navbar = () => {
 				</div>
 
 				{/* Large Screen Links */}
-				<div className='hidden lg:flex flex-wrap space-x-6 items-center ml-6 mt-4 lg:mt-0'>
+				<div className='hidden lg:flex flex-wrap space-x-6 items-center mt-4 lg:mt-0'>
 					<Link to='/' className='flex items-center hover:underline'>
 						<FaHome className='mr-2' /> Home
 					</Link>
@@ -120,12 +126,6 @@ const Navbar = () => {
 						</>
 					)}
 				</div>
-
-				{/* Small Screen Sidebar Toggle */}
-				<Bars3Icon
-					className='h-8 w-8 cursor-pointer lg:hidden'
-					onClick={toggleSidebar}
-				/>
 			</header>
 
 			{/* Loading Spinner */}
@@ -152,13 +152,11 @@ const Sidebar = ({ isOpen, toggleSidebar, onLogout }) => {
 		<div
 			className={`fixed top-0 right-0 h-full bg-blue-500 w-64 transform ${
 				isOpen ? "translate-x-0" : "translate-x-full"
-			} transition-transform duration-[2000ms] ease-in-out z-50`}
+			} transition-transform duration-200 ease-in-out z-50`}
 		>
 			<div className='p-4 text-white'>
 				<XMarkIcon
-					className={`h-8 w-8 cursor-pointer mb-4 ${
-						isOpen ? "delay-[4000ms]" : ""
-					}`}
+					className='h-8 w-8 cursor-pointer mb-4'
 					onClick={toggleSidebar}
 				/>
 				<nav className='space-y-4'>

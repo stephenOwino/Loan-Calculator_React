@@ -133,8 +133,9 @@ const LoanApplicationForm = () => {
 		}
 
 		try {
+			const customerId = 1; // Replace with actual customer ID
 			dispatch(updateLoanData(formData));
-			await dispatch(applyForLoan(formData));
+			await dispatch(applyForLoan({ loanData: formData, customerId }));
 
 			toast.success("Loan application submitted successfully!");
 			setFormData({
