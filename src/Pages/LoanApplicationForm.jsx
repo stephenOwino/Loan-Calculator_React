@@ -142,7 +142,10 @@ const LoanApplicationForm = () => {
 		}
 
 		try {
-			const customerId = user.id; // Assuming user ID is stored in user object
+			const customerId = localStorage.getItem("customerId"); // Retrieve customer ID from localStorage
+			if (!customerId) {
+				throw new Error("Customer ID is not available");
+			}
 			dispatch(updateLoanData(formData));
 			await dispatch(applyForLoan({ loanData: formData, customerId }));
 

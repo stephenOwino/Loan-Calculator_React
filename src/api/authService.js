@@ -14,6 +14,7 @@ const register = async (userData) => {
 			// Save user data to localStorage
 			localStorage.setItem("user", JSON.stringify(response.data));
 			localStorage.setItem("token", response.data.token); // Save JWT token separately
+			localStorage.setItem("customerId", response.data.id); // Save customer ID separately
 		}
 		return response.data;
 	} catch (error) {
@@ -36,13 +37,14 @@ const login = async (userData) => {
 		if (response.data) {
 			// Save the token and user data
 			localStorage.setItem("user", JSON.stringify(response.data));
-			localStorage.setItem("token", response.data); // Save JWT token separately
+			localStorage.setItem("token", response.data.token); // Save JWT token separately
+			localStorage.setItem("customerId", response.data.id); // Save customer ID separately
 		}
 		return response.data;
 	} catch (error) {
 		// Handle errors
 		if (error.response && error.response.data) {
-			throw new Error(error.response.data || "Login failed");
+			throw new Error(error.response.data.message || "Login failed");
 		} else {
 			throw new Error("An unknown error occurred.");
 		}
@@ -53,6 +55,7 @@ const login = async (userData) => {
 const logout = () => {
 	localStorage.removeItem("user");
 	localStorage.removeItem("token"); // Clear the token
+	localStorage.removeItem("customerId"); // Clear the customer ID
 };
 
 // Automatically attach JWT token to axios requests
