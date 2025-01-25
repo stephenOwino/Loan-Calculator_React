@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { resetLoan, updateLoanData, applyForLoan } from "../slices/LoanSlice";
 import { toast } from "react-toastify";
 import LoanSpinner from "../spinner/LoanSpinner";
+import { useNavigate } from "react-router-dom";
 
 const InputField = ({ id, label, type, value, onChange, placeholder }) => (
 	<div className='mb-6'>
@@ -23,6 +24,7 @@ const InputField = ({ id, label, type, value, onChange, placeholder }) => (
 
 const LoanApplicationForm = () => {
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 	const loading = useSelector((state) => state.loan.loading);
 	const error = useSelector((state) => state.loan.error);
 	const appliedLoan = useSelector((state) => state.loan.appliedLoan);
@@ -46,6 +48,12 @@ const LoanApplicationForm = () => {
 			dispatch(resetLoan());
 		}
 	}, [dispatch, error]);
+
+	useEffect(() => {
+		if (!user) {
+			navigate("/login"); // Redirect to login if user is not authenticated
+		}
+	}, [user, navigate]);
 
 	const handleChange = (event) => {
 		const { name, value } = event.target;
