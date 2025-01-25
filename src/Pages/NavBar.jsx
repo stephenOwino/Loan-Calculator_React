@@ -25,6 +25,14 @@ const Navbar = () => {
 	const { user } = useSelector((state) => state.auth);
 	const navigate = useNavigate();
 
+	const onLogout = () => {
+		setIsLoggingOut(true);
+		dispatch(logout());
+		dispatch(reset());
+		navigate("/");
+		setIsLoggingOut(false);
+	};
+
 	useEffect(() => {
 		const handleResize = () => {
 			if (window.innerWidth >= 1024) {
@@ -43,14 +51,6 @@ const Navbar = () => {
 
 	const handleSearchChange = (event) => {
 		setSearchQuery(event.target.value);
-	};
-
-	const handleLogout = () => {
-		setIsLoggingOut(true); // Show loading spinner
-		dispatch(logout());
-		dispatch(reset());
-		navigate("/"); // Redirecting to home page after logout
-		setIsLoggingOut(false); // Hide spinner after logout is complete
 	};
 
 	return (
@@ -120,7 +120,7 @@ const Navbar = () => {
 						<Link
 							to='/logout'
 							className='flex items-center hover:underline'
-							onClick={handleLogout}
+							onClick={onLogout}
 						>
 							<FaSignOutAlt className='mr-2' /> Logout
 						</Link>
@@ -136,7 +136,7 @@ const Navbar = () => {
 
 			{/* Loading Spinner */}
 			{isLoggingOut && (
-				<div className='fixed top-0 left-0 right-0 bottom-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50'>
+				<div className='fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50'>
 					<div className='animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-solid'></div>
 				</div>
 			)}
@@ -145,13 +145,13 @@ const Navbar = () => {
 			<Sidebar
 				isOpen={isSidebarOpen}
 				toggleSidebar={toggleSidebar}
-				handleLogout={handleLogout}
+				handleLogout={onLogout}
 			/>
 		</div>
 	);
 };
 
-const Sidebar = ({ isOpen, toggleSidebar, handleLogout }) => {
+const Sidebar = ({ isOpen, toggleSidebar, onLogout }) => {
 	const { user } = useSelector((state) => state.auth);
 
 	return (
@@ -199,7 +199,7 @@ const Sidebar = ({ isOpen, toggleSidebar, handleLogout }) => {
 						<Link
 							to='#logout'
 							className='flex items-center hover:underline'
-							onClick={handleLogout}
+							onClick={onLogout}
 						>
 							<FaSignOutAlt className='mr-2' /> Logout
 						</Link>
