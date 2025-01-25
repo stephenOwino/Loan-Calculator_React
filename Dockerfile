@@ -22,8 +22,11 @@ FROM nginx:alpine
 # Step 8: Copy the build folder to Nginx public directory
 COPY --from=build /app/dist /usr/share/nginx/html
 
-# Step 9: Expose the necessary port
+# Step 9: Copy custom Nginx configuration file
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Step 10: Expose the necessary port
 EXPOSE 80
 
-# Step 10: Run Nginx to serve the app
+# Step 11: Run Nginx to serve the app
 CMD ["nginx", "-g", "daemon off;"]
