@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: loan-calculator
+    env: docker
+    plan: free
+    dockerfilePath: Dockerfile
+    region: oregon
+    branch: main
+    autoDeploy: true
+    healthCheckPath: /
+    envVars:
+      - key: DOCKER_USERNAME
+        value: ${{ secrets.DOCKER_USERNAME }}
+      - key: DOCKER_PASSWORD
+        value: ${{ secrets.DOCKER_PASSWORD }}
