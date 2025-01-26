@@ -22,6 +22,27 @@ const InputField = ({ id, label, type, value, onChange, placeholder }) => (
 	</div>
 );
 
+const SelectField = ({ id, label, value, onChange, options }) => (
+	<div className='mb-6'>
+		<label htmlFor={id} className='block text-sm font-medium text-gray-700'>
+			{label}
+		</label>
+		<select
+			id={id}
+			name={id}
+			value={value}
+			onChange={onChange}
+			className='mt-2 p-4 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600'
+		>
+			{options.map((option) => (
+				<option key={option} value={option}>
+					{option}
+				</option>
+			))}
+		</select>
+	</div>
+);
+
 const LoanApplicationForm = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
@@ -36,6 +57,9 @@ const LoanApplicationForm = () => {
 		phoneNumber: "",
 		amount: "",
 		loanTerm: "",
+		totalInterest: "",
+		totalRepayment: "",
+		repaymentFrequency: "",
 	});
 
 	const [totalAmount, setTotalAmount] = useState(null);
@@ -96,10 +120,16 @@ const LoanApplicationForm = () => {
 				(principal * monthlyInterestRate) /
 				(1 - Math.pow(1 + monthlyInterestRate, -numberOfPayments));
 			const totalAmount = monthlyPayment * numberOfPayments;
+			const totalInterest = totalAmount - principal;
 
 			setMonthlyPayment(monthlyPayment.toFixed(2));
 			setTotalAmount(totalAmount.toFixed(2));
 			setInterestRate((interestRate * 100).toFixed(2));
+			setFormData({
+				...formData,
+				totalInterest: totalInterest.toFixed(2),
+				totalRepayment: totalAmount.toFixed(2),
+			});
 		}
 	};
 
@@ -119,8 +149,26 @@ const LoanApplicationForm = () => {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 
-		const { fullName, email, phoneNumber, amount, loanTerm } = formData;
-		if (!fullName || !email || !phoneNumber || !amount || !loanTerm) {
+		const {
+			fullName,
+			email,
+			phoneNumber,
+			amount,
+			loanTerm,
+			totalInterest,
+			totalRepayment,
+			repaymentFrequency,
+		} = formData;
+		if (
+			!fullName ||
+			!email ||
+			!phoneNumber ||
+			!amount ||
+			!loanTerm ||
+			!totalInterest ||
+			!totalRepayment ||
+			!repaymentFrequency
+		) {
 			toast.error("Please fill out all fields.");
 			return;
 		}
@@ -147,7 +195,9 @@ const LoanApplicationForm = () => {
 				throw new Error("Customer ID is not available");
 			}
 			dispatch(updateLoanData(formData));
-			await dispatch(applyForLoan({ loanData: formData, customerId }));
+			await dispatch(
+				applyForLoan({ loanData: formData, customerId: parseInt(customerId) })
+			);
 
 			toast.success("Loan application submitted successfully!");
 			setFormData({
@@ -156,6 +206,9 @@ const LoanApplicationForm = () => {
 				phoneNumber: "",
 				amount: "",
 				loanTerm: "",
+				totalInterest: "",
+				totalRepayment: "",
+				repaymentFrequency: "",
 			});
 			setTotalAmount(null);
 			setMonthlyPayment(null);
@@ -232,6 +285,13 @@ const LoanApplicationForm = () => {
 								value={formData.loanTerm}
 								onChange={handleChange}
 								placeholder='Enter loan term in years'
+							/>
+							<SelectField
+								id='repaymentFrequency'
+								label='Repayment Frequency'
+								value={formData.repaymentFrequency}
+								onChange={handleChange}
+								options={["DAILY", "WEEKLY", "MONTHLY", "YEARLY"]}
 							/>
 						</div>
 
