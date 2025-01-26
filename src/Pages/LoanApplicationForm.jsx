@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import LoanSpinner from "../spinner/LoanSpinner";
 import { useNavigate } from "react-router-dom";
 
-// Input Field Component
+// Reusable Input Field Component
 const InputField = ({ id, label, type, value, onChange, placeholder }) => (
 	<div className='mb-6'>
 		<label htmlFor={id} className='block text-sm font-medium text-gray-700'>
@@ -13,45 +13,22 @@ const InputField = ({ id, label, type, value, onChange, placeholder }) => (
 		</label>
 		<input
 			type={type}
-			className='mt-2 p-4 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600'
 			id={id}
 			name={id}
 			value={value}
 			onChange={onChange}
 			placeholder={placeholder}
+			className='mt-2 p-4 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600'
 		/>
 	</div>
 );
 
-// Select Field Component
-const SelectField = ({ id, label, value, onChange, options }) => (
-	<div className='mb-6'>
-		<label htmlFor={id} className='block text-sm font-medium text-gray-700'>
-			{label}
-		</label>
-		<select
-			id={id}
-			name={id}
-			value={value}
-			onChange={onChange}
-			className='mt-2 p-4 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-600'
-		>
-			{options.map((option) => (
-				<option key={option} value={option}>
-					{option}
-				</option>
-			))}
-		</select>
-	</div>
-);
-
+// Main Component
 const LoanApplicationForm = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const loading = useSelector((state) => state.loan.loading);
-	const error = useSelector((state) => state.loan.error);
-	const appliedLoan = useSelector((state) => state.loan.appliedLoan);
-	const { user } = useSelector((state) => state.auth); // Assuming user info is stored in auth slice
+	const { user } = useSelector((state) => state.auth); // Auth State
+	const { loading, error } = useSelector((state) => state.loan);
 
 	const [formData, setFormData] = useState({
 		fullName: "",
@@ -63,143 +40,58 @@ const LoanApplicationForm = () => {
 		purpose: "",
 	});
 
-	const [totalAmount, setTotalAmount] = useState(null);
-	const [monthlyPayment, setMonthlyPayment] = useState(null);
-	const [interestRate, setInterestRate] = useState(null);
-	const [remainingTime, setRemainingTime] = useState(null);
-
-	useEffect(() => {
-		if (!error) {
-			dispatch(resetLoan());
-		}
-	}, [dispatch, error]);
-
 	useEffect(() => {
 		if (!user) {
-			navigate("/login"); // Redirect to login if user is not authenticated
+			navigate("/login");
 		}
-	}, [user, navigate]);
+		return () => dispatch(resetLoan());
+	}, [user, dispatch, navigate]);
 
-	const handleChange = (event) => {
-		const { name, value } = event.target;
-		if (name === "amount" || name === "loanTerm") {
-			if (value < 0) {
-				toast.error("Please enter a positive value.");
-				return;
-			}
-		}
+	// Form Input Changes
+	const handleChange = (e) => {
+		const { name, value } = e.target;
 		setFormData({ ...formData, [name]: value });
 	};
 
-	const calculateInterestRate = (amount) => {
-		if (amount >= 10000 && amount <= 100000) {
-			return 7;
-		} else if (amount > 100000 && amount <= 500000) {
-			return 5;
-		} else if (amount > 500000 && amount <= 1000000) {
-			return 3;
-		} else {
-			return null;
-		}
-	};
-
-	const calculatePayments = () => {
-		const { amount, loanTerm } = formData;
-		if (amount && loanTerm) {
-			const principal = parseFloat(amount);
-			const interestRate = calculateInterestRate(principal) / 100;
-			if (interestRate === null) {
-				setTotalAmount(null);
-				setMonthlyPayment(null);
-				setInterestRate(null);
-				return;
+	// Validation Helper
+	const validateForm = () => {
+		for (const key in formData) {
+			if (!formData[key]) {
+				toast.error("All fields are required.");
+				return false;
 			}
-			const numberOfPayments = parseInt(loanTerm) * 12;
-			const monthlyInterestRate = interestRate / 12;
-
-			const monthlyPayment =
-				(principal * monthlyInterestRate) /
-				(1 - Math.pow(1 + monthlyInterestRate, -numberOfPayments));
-			const totalAmount = monthlyPayment * numberOfPayments;
-			const totalInterest = totalAmount - principal;
-
-			setMonthlyPayment(monthlyPayment.toFixed(2));
-			setTotalAmount(totalAmount.toFixed(2));
-			setInterestRate((interestRate * 100).toFixed(2));
-			setFormData({
-				...formData,
-				totalInterest: totalInterest.toFixed(2),
-				totalRepayment: totalAmount.toFixed(2),
-			});
 		}
+		if (formData.amount <= 0 || formData.loanTerm <= 0) {
+			toast.error("Amount and Loan Term must be positive.");
+			return false;
+		}
+		return true;
 	};
 
-	const calculateRemainingTime = (dueDate) => {
-		const now = new Date();
-		const due = new Date(dueDate);
-		const remainingTimeInSeconds = (due - now) / 1000;
-
-		const days = Math.floor(remainingTimeInSeconds / (24 * 3600));
-		const hours = Math.floor((remainingTimeInSeconds % (24 * 3600)) / 3600);
-		const minutes = Math.floor((remainingTimeInSeconds % 3600) / 60);
-		const seconds = Math.floor(remainingTimeInSeconds % 60);
-
-		return `${days} days, ${hours} hours, ${minutes} minutes, ${seconds} seconds`;
-	};
-
-	const handleSubmit = async (event) => {
-		event.preventDefault();
-
-		const {
-			fullName,
-			email,
-			phoneNumber,
-			amount,
-			loanTerm,
-			repaymentFrequency,
-			purpose,
-		} = formData;
-
-		if (
-			!fullName ||
-			!email ||
-			!phoneNumber ||
-			!amount ||
-			!loanTerm ||
-			!repaymentFrequency ||
-			!purpose
-		) {
-			toast.error("Please fill out all fields.");
-			return;
-		}
-
-		if (amount <= 0) {
-			toast.error("Please enter a valid loan amount.");
-			return;
-		}
-
-		if (loanTerm <= 0) {
-			toast.error("Please enter a valid loan term.");
-			return;
-		}
+	// Submit Handler
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		if (!validateForm()) return;
 
 		try {
-			const customerId = user.customerId; // Assuming customerId is part of the user info
+			const customerId = user.customerId;
 			await dispatch(applyForLoan({ loanData: formData, customerId }));
-			toast.success("Loan application submitted successfully!");
+			toast.success("Loan application submitted!");
 			navigate("/report");
-		} catch (error) {
-			toast.error(error.message);
+		} catch (err) {
+			toast.error(err.message || "An error occurred.");
 		}
 	};
 
 	return (
-		<div className='container mx-auto'>
+		<div className='container mx-auto mt-40'>
 			<h1 className='text-2xl font-semibold text-center mb-6'>
 				Apply for a Loan
 			</h1>
-			<form onSubmit={handleSubmit}>
-				{/* Form Fields */}
+			<form
+				onSubmit={handleSubmit}
+				className='bg-white p-6 rounded-lg shadow-lg'
+			>
 				<InputField
 					id='fullName'
 					label='Full Name'
@@ -219,7 +111,7 @@ const LoanApplicationForm = () => {
 				<InputField
 					id='phoneNumber'
 					label='Phone Number'
-					type='text'
+					type='tel'
 					value={formData.phoneNumber}
 					onChange={handleChange}
 					placeholder='Enter your phone number'
@@ -230,21 +122,23 @@ const LoanApplicationForm = () => {
 					type='number'
 					value={formData.amount}
 					onChange={handleChange}
-					placeholder='Enter loan amount'
+					placeholder='Enter the loan amount'
 				/>
-				<SelectField
+				<InputField
 					id='loanTerm'
-					label='Loan Term (Years)'
+					label='Loan Term (in months)'
+					type='number'
 					value={formData.loanTerm}
 					onChange={handleChange}
-					options={[1, 2, 3, 4, 5]}
+					placeholder='Enter the loan term'
 				/>
-				<SelectField
+				<InputField
 					id='repaymentFrequency'
 					label='Repayment Frequency'
+					type='text'
 					value={formData.repaymentFrequency}
 					onChange={handleChange}
-					options={["Monthly", "Quarterly", "Annually"]}
+					placeholder='e.g., Monthly'
 				/>
 				<InputField
 					id='purpose'
@@ -252,28 +146,14 @@ const LoanApplicationForm = () => {
 					type='text'
 					value={formData.purpose}
 					onChange={handleChange}
-					placeholder='Enter loan purpose'
+					placeholder='State the purpose of the loan'
 				/>
-
-				{/* Display Calculated Information */}
-				<div className='mt-6'>
-					{totalAmount && (
-						<div>
-							<h2>Total Loan Repayment</h2>
-							<p>Total Loan Amount: ${totalAmount}</p>
-							<p>Monthly Payment: ${monthlyPayment}</p>
-							<p>Interest Rate: {interestRate}%</p>
-						</div>
-					)}
-				</div>
-
-				{/* Submit Button */}
 				<button
 					type='submit'
-					className='mt-6 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg'
 					disabled={loading}
+					className='w-full p-4 text-white bg-purple-600 rounded-lg hover:bg-purple-700'
 				>
-					{loading ? <LoanSpinner /> : "Submit Loan Application"}
+					{loading ? <LoanSpinner /> : "Submit Application"}
 				</button>
 			</form>
 		</div>

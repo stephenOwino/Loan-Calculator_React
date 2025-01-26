@@ -1,13 +1,16 @@
 import axios from "axios";
 
-// SPRING BOOT BASE URL
 const API_BASE_URL =
 	"https://loan-calculator-springboot.onrender.com/api/loans";
 
-// Apply for a loan
+// Apply for a Loan
 const applyForLoan = async (loanData, customerId) => {
+	const token = localStorage.getItem("token");
+	if (!token) {
+		throw new Error("Authentication token is missing.");
+	}
+
 	try {
-		const token = localStorage.getItem("token"); // Assuming the token is stored in localStorage
 		const response = await axios.post(
 			`${API_BASE_URL}/${customerId}`,
 			loanData,
@@ -19,16 +22,9 @@ const applyForLoan = async (loanData, customerId) => {
 		);
 		return response.data;
 	} catch (error) {
-		if (error.response && error.response.data) {
-			throw new Error(error.response.data.message || "Loan application failed");
-		} else {
-			throw new Error("An unknown error occurred.");
-		}
+		const message = error?.response?.data?.message || "Loan application failed";
+		throw new Error(message);
 	}
 };
 
-const LoanService = {
-	applyForLoan,
-};
-
-export default LoanService;
+export default { applyForLoan };
