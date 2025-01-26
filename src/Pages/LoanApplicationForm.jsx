@@ -57,9 +57,8 @@ const LoanApplicationForm = () => {
 		phoneNumber: "",
 		amount: "",
 		loanTerm: "",
-		totalInterest: "",
-		totalRepayment: "",
 		repaymentFrequency: "",
+		purpose: "",
 	});
 
 	const [totalAmount, setTotalAmount] = useState(null);
@@ -155,9 +154,8 @@ const LoanApplicationForm = () => {
 			phoneNumber,
 			amount,
 			loanTerm,
-			totalInterest,
-			totalRepayment,
 			repaymentFrequency,
+			purpose,
 		} = formData;
 		if (
 			!fullName ||
@@ -165,9 +163,8 @@ const LoanApplicationForm = () => {
 			!phoneNumber ||
 			!amount ||
 			!loanTerm ||
-			!totalInterest ||
-			!totalRepayment ||
-			!repaymentFrequency
+			!repaymentFrequency ||
+			!purpose
 		) {
 			toast.error("Please fill out all fields.");
 			return;
@@ -206,9 +203,8 @@ const LoanApplicationForm = () => {
 				phoneNumber: "",
 				amount: "",
 				loanTerm: "",
-				totalInterest: "",
-				totalRepayment: "",
 				repaymentFrequency: "",
+				purpose: "",
 			});
 			setTotalAmount(null);
 			setMonthlyPayment(null);
@@ -292,6 +288,20 @@ const LoanApplicationForm = () => {
 								value={formData.repaymentFrequency}
 								onChange={handleChange}
 								options={["DAILY", "WEEKLY", "MONTHLY", "YEARLY"]}
+							/>
+							<SelectField
+								id='purpose'
+								label='Purpose of Loan'
+								value={formData.purpose}
+								onChange={handleChange}
+								options={[
+									"CAR",
+									"HOUSE/MORTGAGE",
+									"BUSINESS",
+									"EDUCATION",
+									"MEDICAL",
+									"OTHER",
+								]}
 							/>
 						</div>
 
