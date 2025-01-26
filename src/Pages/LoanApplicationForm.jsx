@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import LoanSpinner from "../spinner/LoanSpinner";
 import { useNavigate } from "react-router-dom";
 
+// Input Field Component
 const InputField = ({ id, label, type, value, onChange, placeholder }) => (
 	<div className='mb-6'>
 		<label htmlFor={id} className='block text-sm font-medium text-gray-700'>
@@ -22,6 +23,7 @@ const InputField = ({ id, label, type, value, onChange, placeholder }) => (
 	</div>
 );
 
+// Select Field Component
 const SelectField = ({ id, label, value, onChange, options }) => (
 	<div className='mb-6'>
 		<label htmlFor={id} className='block text-sm font-medium text-gray-700'>
@@ -157,6 +159,7 @@ const LoanApplicationForm = () => {
 			repaymentFrequency,
 			purpose,
 		} = formData;
+
 		if (
 			!fullName ||
 			!email ||
@@ -170,190 +173,109 @@ const LoanApplicationForm = () => {
 			return;
 		}
 
-		if (isNaN(amount) || isNaN(loanTerm)) {
-			toast.error("Please enter valid numbers for amount and loan term.");
+		if (amount <= 0) {
+			toast.error("Please enter a valid loan amount.");
 			return;
 		}
 
-		if (
-			Number(amount) < 10000 ||
-			Number(amount) > 1000000 ||
-			Number(loanTerm) <= 0
-		) {
-			toast.error(
-				"Please enter a loan amount between 10,000 KES and 1,000,000 KES and a positive loan term."
-			);
+		if (loanTerm <= 0) {
+			toast.error("Please enter a valid loan term.");
 			return;
 		}
 
 		try {
-			const customerId = localStorage.getItem("customerId"); // Retrieve customer ID from localStorage
-			if (!customerId) {
-				throw new Error("Customer ID is not available");
-			}
-
-			// Retrieve the loan ID from the authenticated user (assuming user object contains loan info)
-			const loanId = user?.loanId; // Assuming 'user' object contains a loanId field
-
-			// CORRECTED: Check if loanId is missing
-			if (!loanId) {
-				console.error("Loan ID is missing for the authenticated user");
-				return;
-			}
-
-			dispatch(updateLoanData(formData));
-			await dispatch(
-				applyForLoan({
-					loanData: formData,
-					customerId: parseInt(customerId),
-					loanId,
-				})
-			);
-
+			const customerId = user.customerId; // Assuming customerId is part of the user info
+			await dispatch(applyForLoan({ loanData: formData, customerId }));
 			toast.success("Loan application submitted successfully!");
-			setFormData({
-				fullName: "",
-				email: "",
-				phoneNumber: "",
-				amount: "",
-				loanTerm: "",
-				repaymentFrequency: "",
-				purpose: "",
-			});
-			setTotalAmount(null);
-			setMonthlyPayment(null);
-			setInterestRate(null);
-
-			navigate("/report"); // Redirect to the report page
+			navigate("/report");
 		} catch (error) {
-			console.error("Loan application error:", error);
-			toast.error(
-				error?.message || "An error occurred while applying for the loan."
-			);
+			toast.error(error.message);
 		}
 	};
 
-	useEffect(() => {
-		calculatePayments();
-	}, [formData.amount, formData.loanTerm]);
-
-	useEffect(() => {
-		if (appliedLoan && appliedLoan.dueDate) {
-			const interval = setInterval(() => {
-				setRemainingTime(calculateRemainingTime(appliedLoan.dueDate));
-			}, 1000);
-
-			return () => clearInterval(interval);
-		}
-	}, [appliedLoan]);
-
 	return (
-		<div className='flex items-center justify-center mt-20 min-h-screen bg-gradient-to-r from-gray-200 via-gray-300 to-gray-400'>
-			<div className='w-full max-w-md p-8 bg-white rounded-xl shadow-2xl lg:max-w-2xl lg:p-12'>
-				<h2 className='text-3xl font-semibold text-center text-gray-800 mb-6'>
-					Apply for a Loan
-				</h2>
-				{loading ? (
-					<LoanSpinner message='Applying for loan...' />
-				) : (
-					<form onSubmit={handleSubmit} className='space-y-6'>
-						<div className='grid grid-cols-1 gap-6 lg:grid-cols-2'>
-							<InputField
-								id='fullName'
-								label='Full Name'
-								type='text'
-								value={formData.fullName}
-								onChange={handleChange}
-								placeholder='Enter your full name'
-							/>
-							<InputField
-								id='email'
-								label='Email'
-								type='email'
-								value={formData.email}
-								onChange={handleChange}
-								placeholder='Enter your email'
-							/>
-							<InputField
-								id='phoneNumber'
-								label='Phone Number'
-								type='tel'
-								value={formData.phoneNumber}
-								onChange={handleChange}
-								placeholder='Enter your phone number'
-							/>
-							<InputField
-								id='amount'
-								label='Loan Amount'
-								type='number'
-								value={formData.amount}
-								onChange={handleChange}
-								placeholder='Enter loan amount'
-							/>
-							<InputField
-								id='loanTerm'
-								label='Loan Term (Years)'
-								type='number'
-								value={formData.loanTerm}
-								onChange={handleChange}
-								placeholder='Enter loan term in years'
-							/>
-							<SelectField
-								id='repaymentFrequency'
-								label='Repayment Frequency'
-								value={formData.repaymentFrequency}
-								onChange={handleChange}
-								options={["DAILY", "WEEKLY", "MONTHLY", "YEARLY"]}
-							/>
-							<SelectField
-								id='purpose'
-								label='Purpose of Loan'
-								value={formData.purpose}
-								onChange={handleChange}
-								options={[
-									"CAR",
-									"HOUSE/MORTGAGE",
-									"BUSINESS",
-									"EDUCATION",
-									"MEDICAL",
-									"OTHER",
-								]}
-							/>
+		<div className='container mx-auto'>
+			<h1 className='text-2xl font-semibold text-center mb-6'>
+				Apply for a Loan
+			</h1>
+			<form onSubmit={handleSubmit}>
+				{/* Form Fields */}
+				<InputField
+					id='fullName'
+					label='Full Name'
+					type='text'
+					value={formData.fullName}
+					onChange={handleChange}
+					placeholder='Enter your full name'
+				/>
+				<InputField
+					id='email'
+					label='Email'
+					type='email'
+					value={formData.email}
+					onChange={handleChange}
+					placeholder='Enter your email'
+				/>
+				<InputField
+					id='phoneNumber'
+					label='Phone Number'
+					type='text'
+					value={formData.phoneNumber}
+					onChange={handleChange}
+					placeholder='Enter your phone number'
+				/>
+				<InputField
+					id='amount'
+					label='Loan Amount'
+					type='number'
+					value={formData.amount}
+					onChange={handleChange}
+					placeholder='Enter loan amount'
+				/>
+				<SelectField
+					id='loanTerm'
+					label='Loan Term (Years)'
+					value={formData.loanTerm}
+					onChange={handleChange}
+					options={[1, 2, 3, 4, 5]}
+				/>
+				<SelectField
+					id='repaymentFrequency'
+					label='Repayment Frequency'
+					value={formData.repaymentFrequency}
+					onChange={handleChange}
+					options={["Monthly", "Quarterly", "Annually"]}
+				/>
+				<InputField
+					id='purpose'
+					label='Purpose of Loan'
+					type='text'
+					value={formData.purpose}
+					onChange={handleChange}
+					placeholder='Enter loan purpose'
+				/>
+
+				{/* Display Calculated Information */}
+				<div className='mt-6'>
+					{totalAmount && (
+						<div>
+							<h2>Total Loan Repayment</h2>
+							<p>Total Loan Amount: ${totalAmount}</p>
+							<p>Monthly Payment: ${monthlyPayment}</p>
+							<p>Interest Rate: {interestRate}%</p>
 						</div>
+					)}
+				</div>
 
-						{totalAmount && monthlyPayment && (
-							<div className='mt-4 p-4 bg-green-100 text-green-700 rounded-lg'>
-								<p>Interest Rate: {interestRate}%</p>
-								<p>
-									Total Amount to be Paid Back (including interest): $
-									{totalAmount}
-								</p>
-								<p>Monthly Payment: ${monthlyPayment}</p>
-							</div>
-						)}
-
-						{remainingTime && (
-							<div className='mt-4 p-4 bg-blue-100 text-blue-700 rounded-lg'>
-								<p>Remaining Time: {remainingTime}</p>
-							</div>
-						)}
-
-						<button
-							type='submit'
-							className='w-full py-3 mt-4 text-white bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:bg-gray-400'
-							disabled={loading}
-						>
-							{loading ? "Applying..." : "Apply for Loan"}
-						</button>
-
-						{error && (
-							<div className='mt-4 p-3 bg-red-100 text-red-700 rounded-lg'>
-								{error}
-							</div>
-						)}
-					</form>
-				)}
-			</div>
+				{/* Submit Button */}
+				<button
+					type='submit'
+					className='mt-6 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg'
+					disabled={loading}
+				>
+					{loading ? <LoanSpinner /> : "Submit Loan Application"}
+				</button>
+			</form>
 		</div>
 	);
 };
