@@ -191,9 +191,23 @@ const LoanApplicationForm = () => {
 			if (!customerId) {
 				throw new Error("Customer ID is not available");
 			}
+
+			// Retrieve the loan ID from the authenticated user (assuming user object contains loan info)
+			const loanId = user?.loanId; // Assuming 'user' object contains a loanId field
+
+			// CORRECTED: Check if loanId is missing
+			if (!loanId) {
+				console.error("Loan ID is missing for the authenticated user");
+				return;
+			}
+
 			dispatch(updateLoanData(formData));
 			await dispatch(
-				applyForLoan({ loanData: formData, customerId: parseInt(customerId) })
+				applyForLoan({
+					loanData: formData,
+					customerId: parseInt(customerId),
+					loanId,
+				})
 			);
 
 			toast.success("Loan application submitted successfully!");
@@ -209,6 +223,8 @@ const LoanApplicationForm = () => {
 			setTotalAmount(null);
 			setMonthlyPayment(null);
 			setInterestRate(null);
+
+			navigate("/report"); // Redirect to the report page
 		} catch (error) {
 			console.error("Loan application error:", error);
 			toast.error(

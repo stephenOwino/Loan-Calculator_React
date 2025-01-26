@@ -7,6 +7,7 @@ import LoginPage from "./Pages/LoginPage";
 import Navbar from "./Pages/NavBar";
 import LoanCalculator from "./Pages/LoanCalculatorPage";
 import LoanApplicationForm from "./Pages/LoanApplicationForm";
+import ReportPage from "./Pages/ReportPage";
 
 const App = () => {
 	return (
@@ -18,6 +19,7 @@ const App = () => {
 				<Route path='/login' element={<LoginPage />} />
 				<Route path='/calculator' element={<LoanCalculator />} />
 				<Route path='/loan' element={<LoanApplicationForm />} />
+				<Route path='/reports' element={<ReportPage />} />
 			</Routes>
 			<ToastContainer />
 		</Router>
