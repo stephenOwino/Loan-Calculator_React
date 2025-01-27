@@ -74,7 +74,7 @@ const LoanApplicationForm = () => {
 		if (!validateForm()) return;
 
 		try {
-			const customerId = user.customerId;
+			const customerId = user.customerId; // Assuming user.customerId holds the customerId
 			await dispatch(applyForLoan({ loanData: formData, customerId }));
 			toast.success("Loan application submitted!");
 			navigate("/report");
