@@ -2,9 +2,13 @@ import React from "react";
 import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-const Footer = () => {
+const Footer = ({ contrast }) => {
 	return (
-		<footer className='bg-blue-500 text-white py-8 mt-10'>
+		<footer
+			className={`py-8 mt-10 ${
+				contrast === "black" ? "bg-black text-white" : "bg-blue-500 text-white"
+			}`}
+		>
 			<div className='container mx-auto px-4'>
 				<div className='flex flex-col lg:flex-row justify-between items-center'>
 					<div className='mb-6 lg:mb-0'>
@@ -74,7 +78,7 @@ const Footer = () => {
 						reserved.
 					</p>
 					<p>Developed by @stephenowinoh</p>
-					<p>WhatsApp: +254114825652</p>
+					<p>WhatsApp: +1234567890</p>
 					<p>Email: stephenowin233@gmail.com</p>
 				</div>
 			</div>

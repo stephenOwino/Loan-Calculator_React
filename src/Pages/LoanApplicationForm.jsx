@@ -75,7 +75,7 @@ const LoanApplicationForm = () => {
 		try {
 			await dispatch(applyForLoan(formData));
 			toast.success("Loan application submitted!");
-			navigate("/report");
+			navigate("/reports");
 		} catch (err) {
 			toast.error(err.message || "An error occurred.");
 		}

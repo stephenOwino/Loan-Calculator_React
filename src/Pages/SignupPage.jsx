@@ -22,6 +22,7 @@ const SignupPage = () => {
 	};
 
 	const [formData, setFormData] = useState(storedFormData);
+	const [redirecting, setRedirecting] = useState(false);
 
 	const { firstName, lastName, username, email, password, confirmPassword } =
 		formData;
@@ -64,7 +65,13 @@ const SignupPage = () => {
 			});
 			localStorage.removeItem("formData");
 
-			navigate("/"); // Redirect after successful registration
+			// Set redirecting state to true to show spinner
+			setRedirecting(true);
+
+			// Redirect to login page after a short delay
+			setTimeout(() => {
+				navigate("/login");
+			}, 2000); // 2 seconds delay
 		}
 
 		// Reset the auth state after handling success/error
@@ -113,8 +120,17 @@ const SignupPage = () => {
 		dispatch(register(userData));
 	};
 
-	if (isLoading) {
-		return <LoadingSpinner />;
+	if (isLoading || redirecting) {
+		return (
+			<div className='flex items-center justify-center min-h-screen'>
+				<LoadingSpinner />
+				{redirecting && (
+					<p className='text-center text-lg font-semibold mt-4'>
+						Now you can login...
+					</p>
+				)}
+			</div>
+		);
 	}
 
 	return (

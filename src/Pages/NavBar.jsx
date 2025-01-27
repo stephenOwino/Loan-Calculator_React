@@ -16,7 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { reset, logout } from "../slices/authSlice";
 import { useNavigate, Link } from "react-router-dom";
 
-const Navbar = () => {
+const Navbar = ({ contrast }) => {
 	const [isSidebarOpen, setSidebarOpen] = useState(false);
 	const [searchQuery, setSearchQuery] = useState("");
 	const [suggestions, setSuggestions] = useState([]);
@@ -27,7 +27,6 @@ const Navbar = () => {
 
 	const pages = [
 		{ name: "Home", path: "/" },
-		{ name: "Loan Calculator", path: "/calculator" },
 		{ name: "Loan Application", path: "/loan" },
 		{ name: "My Account", path: "#my-account" },
 		{ name: "About Us", path: "#about-us" },
@@ -87,7 +86,13 @@ const Navbar = () => {
 
 	return (
 		<div>
-			<header className='w-full bg-blue-500 text-white flex flex-col lg:flex-row items-center justify-between px-4 py-3 lg:py-4 fixed top-0 left-0 right-0 z-50'>
+			<header
+				className={`w-full ${
+					contrast === "black"
+						? "bg-black text-white"
+						: "bg-blue-500 text-white"
+				} flex flex-col lg:flex-row items-center justify-between px-4 py-3 lg:py-4 fixed top-0 left-0 right-0 z-50`}
+			>
 				<div className='flex items-center justify-between w-full lg:w-auto'>
 					<h1 className='text-lg font-bold'>Loan Calculator</h1>
 					<Bars3Icon
@@ -126,12 +131,7 @@ const Navbar = () => {
 					<Link to='/' className='flex items-center text-sm hover:underline'>
 						<FaHome className='mr-1' /> Home
 					</Link>
-					<Link
-						to='/calculator'
-						className='flex items-center text-sm hover:underline'
-					>
-						<FaCalculator className='mr-1' /> Loan Calculator
-					</Link>
+
 					<Link
 						to='/loan'
 						className='flex items-center text-sm hover:underline'
@@ -216,70 +216,47 @@ const Sidebar = ({ isOpen, toggleSidebar, onLogout }) => {
 		>
 			<div className='p-4 text-white'>
 				<XMarkIcon
-					className='h-6 w-6 cursor-pointer mb-4'
+					className='h-8 w-8 cursor-pointer mb-4'
 					onClick={toggleSidebar}
 				/>
 				<nav className='space-y-4'>
-					<Link to='/' className='flex items-center text-sm hover:underline'>
-						<FaHome className='mr-1' /> Home
+					<Link to='/' className='flex items-center hover:underline'>
+						<FaHome className='mr-2' /> Home
 					</Link>
-					<Link
-						to='/calculator'
-						className='flex items-center text-sm hover:underline'
-					>
-						<FaCalculator className='mr-1' /> Loan Calculator
+
+					<Link to='/loan' className='flex items-center hover:underline'>
+						<FaFileAlt className='mr-2' /> Loan Application
 					</Link>
-					<Link
-						to='/loan'
-						className='flex items-center text-sm hover:underline'
-					>
-						<FaFileAlt className='mr-1' /> Loan Application
+					<Link to='#my-account' className='flex items-center hover:underline'>
+						<FaUserAlt className='mr-2' /> My Account
 					</Link>
-					<Link
-						to='#my-account'
-						className='flex items-center text-sm hover:underline'
-					>
-						<FaUserAlt className='mr-1' /> My Account
+					<Link to='#about-us' className='flex items-center hover:underline'>
+						<FaInfoCircle className='mr-2' /> About Us
 					</Link>
-					<Link
-						to='#about-us'
-						className='flex items-center text-sm hover:underline'
-					>
-						<FaInfoCircle className='mr-1' /> About Us
+					<Link to='#faqs' className='flex items-center hover:underline'>
+						<FaQuestionCircle className='mr-2' /> FAQs
 					</Link>
-					<Link
-						to='#faqs'
-						className='flex items-center text-sm hover:underline'
-					>
-						<FaQuestionCircle className='mr-1' /> FAQs
-					</Link>
-					<Link
-						to='#contact-us'
-						className='flex items-center text-sm hover:underline'
-					>
-						<FaPhone className='mr-1' /> Contact Us
+					<Link to='#contact-us' className='flex items-center hover:underline'>
+						<FaPhone className='mr-2' /> Contact Us
 					</Link>
 					{user ? (
 						<Link
 							to='/logout'
-							className='flex items-center text-sm hover:underline'
+							className='flex items-center hover:underline'
 							onClick={onLogout}
 						>
-							<FaSignOutAlt className='mr-1' /> Logout
+							<FaSignOutAlt className='mr-2' /> Logout
 						</Link>
 					) : (
 						<>
 							<Link
 								to='/register'
-								className='flex items-center text-sm hover:underline'
+								className='flex items-center hover:underline'
 							>
-								<FaSignInAlt className='mr-1' /> Register
+								<FaSignInAlt className='mr-2' /> Register
 							</Link>
-							<Link
-								to='/login'
-								className='flex items-center text-sm hover:underline'
-							>
-								<FaSignInAlt className='mr-1' /> Login
+							<Link to='/login' className='flex items-center hover:underline'>
+								<FaSignInAlt className='mr-2' /> Login
 							</Link>
 						</>
 					)}

@@ -3,7 +3,7 @@ import { FaWhatsapp } from "react-icons/fa";
 
 const WhatsAppHelp = () => {
 	return (
-		<div className='fixed top-1/2 right-4 transform -translate-y-1/2'>
+		<div className='fixed top-1/2 right-4 transform -translate-y-1/2 z-50'>
 			<a
 				href='https://wa.me/+254114825652?text=Hey%20would%20you%20take%20me%20through%20loan%20application%20process?'
 				target='_blank'
