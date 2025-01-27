@@ -24,7 +24,6 @@ const App = () => {
 			setContrast("normal");
 		}
 	};
-
 	return (
 		<Router>
 			<div
@@ -58,7 +57,7 @@ const App = () => {
 						}
 					/>
 					<Route
-						path='/report'
+						path='/reports'
 						element={
 							<PrivateRoute>
 								<ReportPage contrast={contrast} />

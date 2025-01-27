@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://your-api-url.com/api/loans/";
+const API_URL = "https://loan-calculator-springboot.onrender.com/api/loans/";
 
 const applyForLoan = async (loanData) => {
 	const response = await axios.post(API_URL, loanData, {

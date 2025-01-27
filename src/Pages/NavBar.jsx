@@ -27,6 +27,7 @@ const Navbar = ({ contrast }) => {
 
 	const pages = [
 		{ name: "Home", path: "/" },
+		{ name: "Loan Calculator", path: "/calculator" },
 		{ name: "Loan Application", path: "/loan" },
 		{ name: "My Account", path: "#my-account" },
 		{ name: "About Us", path: "#about-us" },
@@ -131,7 +132,12 @@ const Navbar = ({ contrast }) => {
 					<Link to='/' className='flex items-center text-sm hover:underline'>
 						<FaHome className='mr-1' /> Home
 					</Link>
-
+					<Link
+						to='/calculator'
+						className='flex items-center text-sm hover:underline'
+					>
+						<FaCalculator className='mr-1' /> Loan Calculator
+					</Link>
 					<Link
 						to='/loan'
 						className='flex items-center text-sm hover:underline'
@@ -223,7 +229,9 @@ const Sidebar = ({ isOpen, toggleSidebar, onLogout }) => {
 					<Link to='/' className='flex items-center hover:underline'>
 						<FaHome className='mr-2' /> Home
 					</Link>
-
+					<Link to='/calculator' className='flex items-center hover:underline'>
+						<FaCalculator className='mr-2' /> Loan Calculator
+					</Link>
 					<Link to='/loan' className='flex items-center hover:underline'>
 						<FaFileAlt className='mr-2' /> Loan Application
 					</Link>
