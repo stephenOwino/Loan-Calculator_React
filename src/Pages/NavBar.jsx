@@ -27,7 +27,6 @@ const Navbar = ({ contrast }) => {
 
 	const pages = [
 		{ name: "Home", path: "/" },
-		{ name: "Loan Calculator", path: "/calculator" },
 		{ name: "Loan Application", path: "/loan" },
 		{ name: "My Account", path: "#my-account" },
 		{ name: "About Us", path: "#about-us" },
@@ -95,7 +94,6 @@ const Navbar = ({ contrast }) => {
 				} flex flex-col lg:flex-row items-center justify-between px-4 py-3 lg:py-4 fixed top-0 left-0 right-0 z-50`}
 			>
 				<div className='flex items-center justify-between w-full lg:w-auto'>
-					<h1 className='text-lg font-bold'>Loan Calculator</h1>
 					<Bars3Icon
 						className='h-6 w-6 cursor-pointer lg:hidden'
 						onClick={toggleSidebar}
@@ -132,12 +130,7 @@ const Navbar = ({ contrast }) => {
 					<Link to='/' className='flex items-center text-sm hover:underline'>
 						<FaHome className='mr-1' /> Home
 					</Link>
-					<Link
-						to='/calculator'
-						className='flex items-center text-sm hover:underline'
-					>
-						<FaCalculator className='mr-1' /> Loan Calculator
-					</Link>
+
 					<Link
 						to='/loan'
 						className='flex items-center text-sm hover:underline'
@@ -229,9 +222,7 @@ const Sidebar = ({ isOpen, toggleSidebar, onLogout }) => {
 					<Link to='/' className='flex items-center hover:underline'>
 						<FaHome className='mr-2' /> Home
 					</Link>
-					<Link to='/calculator' className='flex items-center hover:underline'>
-						<FaCalculator className='mr-2' /> Loan Calculator
-					</Link>
+
 					<Link to='/loan' className='flex items-center hover:underline'>
 						<FaFileAlt className='mr-2' /> Loan Application
 					</Link>
