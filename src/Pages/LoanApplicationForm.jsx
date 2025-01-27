@@ -68,14 +68,12 @@ const LoanApplicationForm = () => {
 		return true;
 	};
 
-	// Submit Handler
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		if (!validateForm()) return;
 
 		try {
-			const customerId = user.customerId; // Assuming user.customerId holds the customerId
-			await dispatch(applyForLoan({ loanData: formData, customerId }));
+			await dispatch(applyForLoan(formData));
 			toast.success("Loan application submitted!");
 			navigate("/report");
 		} catch (err) {
@@ -155,6 +153,11 @@ const LoanApplicationForm = () => {
 				>
 					{loading ? <LoanSpinner /> : "Submit Application"}
 				</button>
+				{error && (
+					<div className='mt-4 p-3 bg-red-100 text-red-700 rounded-lg'>
+						{error}
+					</div>
+				)}
 			</form>
 		</div>
 	);

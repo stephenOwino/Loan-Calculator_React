@@ -17,17 +17,21 @@ const initialState = {
 	appliedLoan: null,
 };
 
-// Async Thunk: Apply for a Loan
+// Apply for a loan
 export const applyForLoan = createAsyncThunk(
 	"loan/apply",
-	async ({ loanData, customerId }, thunkAPI) => {
+	async (loanData, thunkAPI) => {
 		try {
-			const response = await LoanService.applyForLoan(loanData, customerId);
-			return response; // Returning response data
+			const response = await LoanService.applyForLoan(loanData);
+			return response;
 		} catch (error) {
-			const errorMessage =
-				error?.response?.data?.message || error.message || "Unexpected error";
-			return thunkAPI.rejectWithValue(errorMessage); // Standardized error response
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
+			return thunkAPI.rejectWithValue(message);
 		}
 	}
 );
@@ -40,14 +44,16 @@ const loanSlice = createSlice({
 			state.loanData = { ...state.loanData, ...action.payload };
 		},
 		resetLoan(state) {
-			Object.assign(state, initialState);
+			state.loanData = initialState.loanData;
+			state.loading = false;
+			state.error = null;
+			state.appliedLoan = null;
 		},
 	},
 	extraReducers: (builder) => {
 		builder
 			.addCase(applyForLoan.pending, (state) => {
 				state.loading = true;
-				state.error = null;
 			})
 			.addCase(applyForLoan.fulfilled, (state, action) => {
 				state.loading = false;
@@ -57,7 +63,9 @@ const loanSlice = createSlice({
 			.addCase(applyForLoan.rejected, (state, action) => {
 				state.loading = false;
 				state.error = action.payload;
-				toast.error(action.payload || "Loan application failed.");
+				toast.error(
+					action.payload || "An error occurred while applying for the loan."
+				);
 			});
 	},
 });

@@ -8,6 +8,7 @@ import Navbar from "./Pages/NavBar";
 import LoanCalculator from "./Pages/LoanCalculatorPage";
 import LoanApplicationForm from "./Pages/LoanApplicationForm";
 import ReportPage from "./Pages/ReportPage";
+import Footer from "./Pages/Footer";
 
 const App = () => {
 	return (
@@ -22,6 +23,7 @@ const App = () => {
 				<Route path='/reports' element={<ReportPage />} />
 			</Routes>
 			<ToastContainer />
+			<Footer />
 		</Router>
 	);
 };
