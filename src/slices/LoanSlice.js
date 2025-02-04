@@ -11,6 +11,7 @@ const initialState = {
 		loanTerm: "",
 		repaymentFrequency: "",
 		purpose: "",
+		location: "", // Added location field
 	},
 	loading: false,
 	error: null,
@@ -18,7 +19,6 @@ const initialState = {
 	loanStatement: "",
 };
 
-// Apply for a loan
 export const applyForLoan = createAsyncThunk(
 	"loan/apply",
 	async (loanData, thunkAPI) => {
@@ -37,7 +37,6 @@ export const applyForLoan = createAsyncThunk(
 	}
 );
 
-// Fetch loan statement
 export const fetchLoanStatement = createAsyncThunk(
 	"loan/fetchStatement",
 	async (_, thunkAPI) => {

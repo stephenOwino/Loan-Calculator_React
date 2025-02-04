@@ -17,7 +17,7 @@ const Footer = ({ contrast }) => {
 							Your trusted partner for loan calculations and applications.
 						</p>
 					</div>
-					<div className='flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-8'>
+					<div className='flex flex-col lg:flex-row space-y-4 lg:space-y-0 lg:space-x-8 text-center'>
 						<Link to='/' className='hover:underline'>
 							Home
 						</Link>
@@ -78,7 +78,7 @@ const Footer = ({ contrast }) => {
 						reserved.
 					</p>
 					<p>Developed by @stephenowinoh</p>
-					<p>WhatsApp: +1234567890</p>
+					<p>WhatsApp: +254114825652</p>
 					<p>Email: stephenowin233@gmail.com</p>
 				</div>
 			</div>

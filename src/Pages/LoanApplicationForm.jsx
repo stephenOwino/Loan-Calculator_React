@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { resetLoan, updateLoanData, applyForLoan } from "../slices/LoanSlice";
+import { resetLoan, applyForLoan } from "../slices/LoanSlice";
 import { toast } from "react-toastify";
 import LoanSpinner from "../spinner/LoanSpinner";
 import { useNavigate } from "react-router-dom";
 
-// Reusable Input Field Component
 const InputField = ({ id, label, type, value, onChange, placeholder }) => (
 	<div className='mb-6'>
 		<label htmlFor={id} className='block text-sm font-medium text-gray-700'>
@@ -23,11 +22,10 @@ const InputField = ({ id, label, type, value, onChange, placeholder }) => (
 	</div>
 );
 
-// Main Component
 const LoanApplicationForm = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const { user } = useSelector((state) => state.auth); // Auth State
+	const { user } = useSelector((state) => state.auth);
 	const { loading, error } = useSelector((state) => state.loan);
 
 	const [formData, setFormData] = useState({
@@ -38,6 +36,7 @@ const LoanApplicationForm = () => {
 		loanTerm: "",
 		repaymentFrequency: "",
 		purpose: "",
+		location: "", // Added location field
 	});
 
 	useEffect(() => {
@@ -47,13 +46,11 @@ const LoanApplicationForm = () => {
 		return () => dispatch(resetLoan());
 	}, [user, dispatch, navigate]);
 
-	// Form Input Changes
 	const handleChange = (e) => {
 		const { name, value } = e.target;
 		setFormData({ ...formData, [name]: value });
 	};
 
-	// Validation Helper
 	const validateForm = () => {
 		for (const key in formData) {
 			if (!formData[key]) {
@@ -82,8 +79,8 @@ const LoanApplicationForm = () => {
 	};
 
 	return (
-		<div className='container mx-auto mt-40'>
-			<h1 className='text-2xl font-semibold text-center mb-6'>
+		<div className='container mx-auto p-4 sm:p-6 lg:p-8'>
+			<h1 className='text-3xl font-semibold text-center mb-6'>
 				Apply for a Loan
 			</h1>
 			<form
@@ -145,6 +142,14 @@ const LoanApplicationForm = () => {
 					value={formData.purpose}
 					onChange={handleChange}
 					placeholder='State the purpose of the loan'
+				/>
+				<InputField
+					id='location'
+					label='Location'
+					type='text'
+					value={formData.location}
+					onChange={handleChange}
+					placeholder='Enter your location'
 				/>
 				<button
 					type='submit'

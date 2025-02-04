@@ -45,6 +45,20 @@ export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
 	}
 });
 
+// LOGOUT USER
+export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
+	try {
+		await authService.logout();
+		return true; // You can return anything to signal the action was successful
+	} catch (error) {
+		const message =
+			(error.response && error.response.data && error.response.data.message) ||
+			error.message ||
+			error.toString();
+		return thunkAPI.rejectWithValue(message);
+	}
+});
+
 // Slice
 export const authSlice = createSlice({
 	name: "auth",
@@ -94,21 +108,6 @@ export const authSlice = createSlice({
 				state.message = "";
 			});
 	},
-});
-
-//LOGOUT
-// LOGOUT
-export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
-	try {
-		await authService.logout();
-		return true; // You can return anything to signal the action was successful
-	} catch (error) {
-		const message =
-			(error.response && error.response.data && error.response.data.message) ||
-			error.message ||
-			error.toString();
-		return thunkAPI.rejectWithValue(message);
-	}
 });
 
 export const { reset } = authSlice.actions;

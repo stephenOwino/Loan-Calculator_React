@@ -15,83 +15,85 @@ const SignupForm = ({ formData, onChange, onSubmit, isLoading }) => {
 	};
 
 	return (
-		<form
-			onSubmit={onSubmit}
-			className='w-full space-y-4 h-auto overflow-y-auto'
-		>
+		<form onSubmit={onSubmit} className='w-full space-y-6'>
 			{/* First Name */}
 			<div className='flex flex-col w-full'>
-				<label htmlFor='first name' className='text-left mb-2'>
+				<label htmlFor='firstName' className='text-left mb-2 font-medium'>
 					First Name
 				</label>
 				<input
 					type='text'
 					name='firstName'
-					placeholder='Enter your first name...'
+					id='firstName'
+					placeholder='Enter your first name'
 					value={formData.firstName}
 					onChange={onChange}
-					className='border rounded-md p-2 w-full'
+					className='border rounded-md p-3 w-full focus:border-blue-500 focus:ring-blue-500'
 				/>
 			</div>
 
 			{/* Last Name */}
 			<div className='flex flex-col w-full'>
-				<label htmlFor='last name' className='text-left mb-2'>
+				<label htmlFor='lastName' className='text-left mb-2 font-medium'>
 					Last Name
 				</label>
 				<input
 					type='text'
 					name='lastName'
-					placeholder='Enter your last name...'
+					id='lastName'
+					placeholder='Enter your last name'
 					value={formData.lastName}
 					onChange={onChange}
-					className='border rounded-md p-2 w-full'
+					className='border rounded-md p-3 w-full focus:border-blue-500 focus:ring-blue-500'
 				/>
 			</div>
 
 			{/* Username */}
 			<div className='flex flex-col w-full'>
-				<label htmlFor='username' className='text-left mb-2'>
+				<label htmlFor='username' className='text-left mb-2 font-medium'>
 					Username
 				</label>
 				<input
 					type='text'
 					name='username'
-					placeholder='Enter a username...'
+					id='username'
+					placeholder='Enter a username'
 					value={formData.username}
 					onChange={onChange}
-					className='border rounded-md p-2 w-full'
+					className='border rounded-md p-3 w-full focus:border-blue-500 focus:ring-blue-500'
 				/>
 			</div>
 
 			{/* Email */}
 			<div className='flex flex-col w-full'>
-				<label htmlFor='email' className='text-left mb-2'>
-					Email address
+				<label htmlFor='email' className='text-left mb-2 font-medium'>
+					Email Address
 				</label>
 				<input
 					type='email'
 					name='email'
-					placeholder='Enter your email address...'
+					id='email'
+					placeholder='Enter your email address'
 					value={formData.email}
 					onChange={onChange}
-					className='border rounded-md p-2 w-full'
+					className='border rounded-md p-3 w-full focus:border-blue-500 focus:ring-blue-500'
 				/>
 			</div>
 
 			{/* Password */}
 			<div className='flex flex-col w-full'>
-				<label htmlFor='password' className='text-left mb-2'>
+				<label htmlFor='password' className='text-left mb-2 font-medium'>
 					Password
 				</label>
 				<div className='relative'>
 					<input
 						type={showPassword ? "text" : "password"}
 						name='password'
-						placeholder='Enter your password...'
+						id='password'
+						placeholder='Enter your password'
 						value={formData.password}
 						onChange={onChange}
-						className='border rounded-md p-2 w-full'
+						className='border rounded-md p-3 w-full focus:border-blue-500 focus:ring-blue-500'
 					/>
 					<div
 						className='absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer'
@@ -108,7 +110,7 @@ const SignupForm = ({ formData, onChange, onSubmit, isLoading }) => {
 
 			{/* Confirm Password */}
 			<div className='flex flex-col w-full'>
-				<label htmlFor='confirmPassword' className='text-left mb-2'>
+				<label htmlFor='confirmPassword' className='text-left mb-2 font-medium'>
 					Confirm Password
 				</label>
 				<div className='relative'>
@@ -116,10 +118,10 @@ const SignupForm = ({ formData, onChange, onSubmit, isLoading }) => {
 						type={showConfirmPassword ? "text" : "password"}
 						name='confirmPassword'
 						id='confirmPassword'
-						placeholder='Enter your password again...'
+						placeholder='Confirm your password'
 						value={formData.confirmPassword}
 						onChange={onChange}
-						className='border rounded-md p-2 w-full'
+						className='border rounded-md p-3 w-full focus:border-blue-500 focus:ring-blue-500'
 					/>
 					<div
 						className='absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer'
@@ -138,9 +140,12 @@ const SignupForm = ({ formData, onChange, onSubmit, isLoading }) => {
 			<div className='w-full'>
 				<button
 					type='submit'
-					className='bg-blue-600 text-white w-full py-2 rounded-md hover:bg-blue-700'
+					className={`bg-blue-600 text-white w-full py-3 rounded-md hover:bg-blue-700 ${
+						isLoading ? "cursor-not-allowed opacity-50" : ""
+					}`}
+					disabled={isLoading}
 				>
-					{isLoading ? "Loading..." : "Submit"}
+					{isLoading ? "Loading..." : "Sign Up"}
 				</button>
 			</div>
 

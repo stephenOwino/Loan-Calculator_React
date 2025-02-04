@@ -11,14 +11,12 @@ const register = async (userData) => {
 			userData
 		);
 		if (response.data) {
-			// Save user data to localStorage
 			localStorage.setItem("user", JSON.stringify(response.data));
 			localStorage.setItem("token", response.data.token); // Save JWT token separately
 			localStorage.setItem("customerId", response.data.id); // Save customer ID separately
 		}
 		return response.data;
 	} catch (error) {
-		// Handle errors
 		if (error.response && error.response.data) {
 			throw new Error(error.response.data.message || "Registration failed");
 		} else {
@@ -35,14 +33,12 @@ const login = async (userData) => {
 			userData
 		);
 		if (response.data) {
-			// Save the token and user data
 			localStorage.setItem("user", JSON.stringify(response.data));
 			localStorage.setItem("token", response.data.token); // Save JWT token separately
 			localStorage.setItem("customerId", response.data.id); // Save customer ID separately
 		}
 		return response.data;
 	} catch (error) {
-		// Handle errors
 		if (error.response && error.response.data) {
 			throw new Error(error.response.data.message || "Login failed");
 		} else {

@@ -11,7 +11,6 @@ const SignupPage = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	// Retrieve form data from localStorage or set defaults
 	const storedFormData = JSON.parse(localStorage.getItem("formData")) || {
 		firstName: "",
 		lastName: "",
@@ -31,14 +30,11 @@ const SignupPage = () => {
 		(state) => state.auth
 	);
 
-	// Define toast IDs to prevent duplicate toasts
 	const toastErrorId = "toast-error-id";
 	const toastSuccessId = "toast-success-id";
 
 	useEffect(() => {
-		// Only show error toast if registration fails after form submission
 		if (isError && message && !toast.isActive(toastErrorId)) {
-			// Check if the error message is "Username already exists"
 			if (message === "Username already exists") {
 				toast.error("Username already exists, choose another one", {
 					toastId: toastErrorId,
@@ -50,11 +46,9 @@ const SignupPage = () => {
 			}
 		}
 
-		// Show success toast only if registration is successful after form submission
 		if (isSuccess && !toast.isActive(toastSuccessId)) {
 			toast.success("Registration successful!", { toastId: toastSuccessId });
 
-			// Clear form data and localStorage on success
 			setFormData({
 				firstName: "",
 				lastName: "",
@@ -65,34 +59,28 @@ const SignupPage = () => {
 			});
 			localStorage.removeItem("formData");
 
-			// Set redirecting state to true to show spinner
 			setRedirecting(true);
 
-			// Redirect to login page after a short delay
 			setTimeout(() => {
 				navigate("/login");
-			}, 2000); // 2 seconds delay
+			}, 2000);
 		}
 
-		// Reset the auth state after handling success/error
 		dispatch(reset());
 	}, [user, isError, isSuccess, message, navigate, dispatch]);
 
-	// Update formData and save to localStorage
 	const onChange = (e) => {
 		const updatedFormData = {
 			...formData,
 			[e.target.name]: e.target.value,
 		};
 		setFormData(updatedFormData);
-		localStorage.setItem("formData", JSON.stringify(updatedFormData)); // Save to localStorage
+		localStorage.setItem("formData", JSON.stringify(updatedFormData));
 	};
 
-	// Prevent form submission if the form is invalid
 	const onSubmit = (e) => {
 		e.preventDefault();
 
-		// Check if form is empty
 		if (
 			!firstName ||
 			!lastName ||
@@ -104,18 +92,16 @@ const SignupPage = () => {
 			if (!toast.isActive(toastErrorId)) {
 				toast.error("Please fill in all fields.", { toastId: toastErrorId });
 			}
-			return; // Prevent form submission
+			return;
 		}
 
-		// Check if passwords match
 		if (password !== confirmPassword) {
 			if (!toast.isActive(toastErrorId)) {
 				toast.error("Passwords do not match!", { toastId: toastErrorId });
 			}
-			return; // Prevent form submission
+			return;
 		}
 
-		// If all validations pass, dispatch register
 		const userData = { firstName, lastName, username, email, password };
 		dispatch(register(userData));
 	};

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/solid";
 import {
 	FaHome,
-	FaCalculator,
 	FaFileAlt,
 	FaUserAlt,
 	FaInfoCircle,
@@ -32,9 +31,6 @@ const Navbar = ({ contrast }) => {
 		{ name: "About Us", path: "#about-us" },
 		{ name: "FAQs", path: "#faqs" },
 		{ name: "Contact Us", path: "#contact-us" },
-		{ name: "Register", path: "/register" },
-		{ name: "Login", path: "/login" },
-		{ name: "Logout", path: "/logout" },
 	];
 
 	const onLogout = () => {
@@ -89,8 +85,8 @@ const Navbar = ({ contrast }) => {
 			<header
 				className={`w-full ${
 					contrast === "black"
-						? "bg-black text-white"
-						: "bg-blue-500 text-white"
+						? "bg-gray-900 text-white"
+						: "bg-indigo-600 text-white"
 				} flex flex-col lg:flex-row items-center justify-between px-4 py-3 lg:py-4 fixed top-0 left-0 right-0 z-50`}
 			>
 				<div className='flex items-center justify-between w-full lg:w-auto'>
@@ -126,42 +122,18 @@ const Navbar = ({ contrast }) => {
 					)}
 				</div>
 
-				<div className='hidden lg:flex flex-wrap space-x-4 items-center mt-4 lg:mt-0'>
-					<Link to='/' className='flex items-center text-sm hover:underline'>
-						<FaHome className='mr-1' /> Home
-					</Link>
-
-					<Link
-						to='/loan'
-						className='flex items-center text-sm hover:underline'
-					>
-						<FaFileAlt className='mr-1' /> Loan Application
-					</Link>
-					<Link
-						to='#my-account'
-						className='flex items-center text-sm hover:underline'
-					>
-						<FaUserAlt className='mr-1' /> My Account
-					</Link>
-					<Link
-						to='#about-us'
-						className='flex items-center text-sm hover:underline'
-					>
-						<FaInfoCircle className='mr-1' /> About Us
-					</Link>
-					<Link
-						to='#faqs'
-						className='flex items-center text-sm hover:underline'
-					>
-						<FaQuestionCircle className='mr-1' /> FAQs
-					</Link>
-					<Link
-						to='#contact-us'
-						className='flex items-center text-sm hover:underline'
-					>
-						<FaPhone className='mr-1' /> Contact Us
-					</Link>
-
+				<nav className='hidden lg:flex flex-wrap space-x-4 items-center mt-4 lg:mt-0'>
+					{pages.map((page) => (
+						<Link
+							key={page.name}
+							to={page.path}
+							className='flex items-center text-sm hover:underline'
+							onClick={page.path === "/logout" ? onLogout : null}
+						>
+							{getIcon(page.name)}
+							{page.name}
+						</Link>
+					))}
 					{user ? (
 						<Link
 							to='/logout'
@@ -186,12 +158,12 @@ const Navbar = ({ contrast }) => {
 							</Link>
 						</>
 					)}
-				</div>
+				</nav>
 			</header>
 
 			{isLoggingOut && (
 				<div className='fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center z-50'>
-					<div className='animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-solid'></div>
+					<div className='animate-spin rounded-full h-16 w-16 border-t-4 border-indigo-600 border-solid'></div>
 				</div>
 			)}
 
@@ -209,7 +181,7 @@ const Sidebar = ({ isOpen, toggleSidebar, onLogout }) => {
 
 	return (
 		<div
-			className={`fixed top-0 right-0 h-full bg-blue-500 w-64 transform ${
+			className={`fixed top-0 right-0 h-full bg-indigo-600 w-64 transform ${
 				isOpen ? "translate-x-0" : "translate-x-full"
 			} transition-transform duration-200 ease-in-out z-50`}
 		>
@@ -219,34 +191,25 @@ const Sidebar = ({ isOpen, toggleSidebar, onLogout }) => {
 					onClick={toggleSidebar}
 				/>
 				<nav className='space-y-4'>
-					<Link to='/' className='flex items-center hover:underline'>
-						<FaHome className='mr-2' /> Home
-					</Link>
-
-					<Link to='/loan' className='flex items-center hover:underline'>
-						<FaFileAlt className='mr-2' /> Loan Application
-					</Link>
-					<Link to='#my-account' className='flex items-center hover:underline'>
-						<FaUserAlt className='mr-2' /> My Account
-					</Link>
-					<Link to='#about-us' className='flex items-center hover:underline'>
-						<FaInfoCircle className='mr-2' /> About Us
-					</Link>
-					<Link to='#faqs' className='flex items-center hover:underline'>
-						<FaQuestionCircle className='mr-2' /> FAQs
-					</Link>
-					<Link to='#contact-us' className='flex items-center hover:underline'>
-						<FaPhone className='mr-2' /> Contact Us
-					</Link>
-					{user ? (
+					{[
+						{ name: "Home", path: "/" },
+						{ name: "Loan Application", path: "/loan" },
+						{ name: "My Account", path: "#my-account" },
+						{ name: "About Us", path: "#about-us" },
+						{ name: "FAQs", path: "#faqs" },
+						{ name: "Contact Us", path: "#contact-us" },
+					].map((page) => (
 						<Link
-							to='/logout'
+							key={page.name}
+							to={page.path}
 							className='flex items-center hover:underline'
-							onClick={onLogout}
+							onClick={page.path === "/logout" ? onLogout : null}
 						>
-							<FaSignOutAlt className='mr-2' /> Logout
+							{getIcon(page.name)}
+							{page.name}
 						</Link>
-					) : (
+					))}
+					{!user ? (
 						<>
 							<Link
 								to='/register'
@@ -258,11 +221,43 @@ const Sidebar = ({ isOpen, toggleSidebar, onLogout }) => {
 								<FaSignInAlt className='mr-2' /> Login
 							</Link>
 						</>
+					) : (
+						<Link
+							to='/logout'
+							className='flex items-center hover:underline'
+							onClick={onLogout}
+						>
+							<FaSignOutAlt className='mr-2' /> Logout
+						</Link>
 					)}
 				</nav>
 			</div>
 		</div>
 	);
+};
+
+const getIcon = (name) => {
+	switch (name) {
+		case "Home":
+			return <FaHome className='mr-1' />;
+		case "Loan Application":
+			return <FaFileAlt className='mr-1' />;
+		case "My Account":
+			return <FaUserAlt className='mr-1' />;
+		case "About Us":
+			return <FaInfoCircle className='mr-1' />;
+		case "FAQs":
+			return <FaQuestionCircle className='mr-1' />;
+		case "Contact Us":
+			return <FaPhone className='mr-1' />;
+		case "Register":
+		case "Login":
+			return <FaSignInAlt className='mr-1' />;
+		case "Logout":
+			return <FaSignOutAlt className='mr-1' />;
+		default:
+			return null;
+	}
 };
 
 export default Navbar;
