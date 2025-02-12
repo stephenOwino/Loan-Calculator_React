@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import authService from "../api/authService";
 
-// Get customer from localStorage
+// Get customer info from localStorage
 const customer = JSON.parse(localStorage.getItem("customer"));
 
 const initialState = {
@@ -28,7 +28,6 @@ export const register = createAsyncThunk(
 					error.response.data.message) ||
 				error.message ||
 				error.toString();
-
 			return thunkAPI.rejectWithValue(message);
 		}
 	}
@@ -40,9 +39,9 @@ export const login = createAsyncThunk(
 	async (customer, thunkAPI) => {
 		try {
 			const response = await authService.login(customer);
-			localStorage.setItem("customer", JSON.stringify(response));
 			localStorage.setItem("token", response.token); // Store token
-			return response;
+			localStorage.setItem("customerId", response.id); // Store customer ID
+			return { token: response.token, id: response.id }; // Only store token and id
 		} catch (error) {
 			const message =
 				(error.response &&
@@ -50,7 +49,6 @@ export const login = createAsyncThunk(
 					error.response.data.message) ||
 				error.message ||
 				error.toString();
-
 			return thunkAPI.rejectWithValue(message);
 		}
 	}
@@ -61,8 +59,9 @@ export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
 	try {
 		await authService.logout();
 		localStorage.removeItem("customer");
-		localStorage.removeItem("token"); // Remove token on logout
-		return true; // You can return anything to signal the action was successful
+		localStorage.removeItem("token"); // Remove token
+		localStorage.removeItem("customerId"); // Remove customer ID
+		return true;
 	} catch (error) {
 		const message =
 			(error.response && error.response.data && error.response.data.message) ||
@@ -106,7 +105,7 @@ export const authSlice = createSlice({
 			.addCase(login.fulfilled, (state, action) => {
 				state.isLoading = false;
 				state.isSuccess = true;
-				state.customer = action.payload;
+				state.customer = { id: action.payload.id }; // Only store customer ID
 			})
 			.addCase(login.rejected, (state, action) => {
 				state.isLoading = false;

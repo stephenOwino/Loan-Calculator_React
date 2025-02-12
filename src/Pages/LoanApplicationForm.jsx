@@ -41,11 +41,11 @@ const LoanApplicationForm = () => {
 
 	useEffect(() => {
 		if (!customer) {
-			// Check customer instead of user
+			// If there's no customer, navigate to the login page
 			navigate("/login");
 		}
-		return () => dispatch(resetLoan());
-	}, [customer, dispatch, navigate]); // Check customer instead of user
+		return () => dispatch(resetLoan()); // Reset loan state when component unmounts
+	}, [customer, dispatch, navigate]);
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
@@ -63,6 +63,20 @@ const LoanApplicationForm = () => {
 			toast.error("Amount and Loan Term must be positive.");
 			return false;
 		}
+
+		// Additional validation can be added for email or phone number if needed
+		const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+		if (!emailPattern.test(formData.email)) {
+			toast.error("Please enter a valid email address.");
+			return false;
+		}
+
+		const phonePattern = /^[0-9]{10}$/; // Assuming phone number should be 10 digits
+		if (!phonePattern.test(formData.phoneNumber)) {
+			toast.error("Please enter a valid phone number.");
+			return false;
+		}
+
 		return true;
 	};
 
@@ -71,9 +85,9 @@ const LoanApplicationForm = () => {
 		if (!validateForm()) return;
 
 		try {
+			// Apply for loan by dispatching the action with formData
 			await dispatch(applyForLoan(formData));
 			toast.success("Loan application submitted!");
-			navigate("/reports");
 		} catch (err) {
 			toast.error(err.message || "An error occurred.");
 		}
