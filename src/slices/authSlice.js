@@ -1,23 +1,24 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import authService from "../api/authService";
 
-// Get user from localStorage
-const user = JSON.parse(localStorage.getItem("user"));
+// Get customer from localStorage
+const customer = JSON.parse(localStorage.getItem("customer"));
 
 const initialState = {
-	user: user ? user : null,
+	customer: customer ? customer : null,
 	isError: false,
 	isLoading: false,
 	isSuccess: false,
 	message: "",
 };
 
-// REGISTER USER
+// REGISTER CUSTOMER
 export const register = createAsyncThunk(
 	"auth/register",
-	async (user, thunkAPI) => {
+	async (customer, thunkAPI) => {
 		try {
-			const response = await authService.register(user);
+			const response = await authService.register(customer);
+			localStorage.setItem("customer", JSON.stringify(response));
 			localStorage.setItem("token", response.token); // Store token
 			return response;
 		} catch (error) {
@@ -33,26 +34,33 @@ export const register = createAsyncThunk(
 	}
 );
 
-// LOGIN USER
-export const login = createAsyncThunk("auth/login", async (user, thunkAPI) => {
-	try {
-		const response = await authService.login(user);
-		localStorage.setItem("token", response.token); // Store token
-		return response;
-	} catch (error) {
-		const message =
-			(error.response && error.response.data && error.response.data.message) ||
-			error.message ||
-			error.toString();
+// LOGIN CUSTOMER
+export const login = createAsyncThunk(
+	"auth/login",
+	async (customer, thunkAPI) => {
+		try {
+			const response = await authService.login(customer);
+			localStorage.setItem("customer", JSON.stringify(response));
+			localStorage.setItem("token", response.token); // Store token
+			return response;
+		} catch (error) {
+			const message =
+				(error.response &&
+					error.response.data &&
+					error.response.data.message) ||
+				error.message ||
+				error.toString();
 
-		return thunkAPI.rejectWithValue(message);
+			return thunkAPI.rejectWithValue(message);
+		}
 	}
-});
+);
 
-// LOGOUT USER
+// LOGOUT CUSTOMER
 export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
 	try {
 		await authService.logout();
+		localStorage.removeItem("customer");
 		localStorage.removeItem("token"); // Remove token on logout
 		return true; // You can return anything to signal the action was successful
 	} catch (error) {
@@ -84,13 +92,13 @@ export const authSlice = createSlice({
 			.addCase(register.fulfilled, (state, action) => {
 				state.isLoading = false;
 				state.isSuccess = true;
-				state.user = action.payload;
+				state.customer = action.payload;
 			})
 			.addCase(register.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;
-				state.user = null;
+				state.customer = null;
 			})
 			.addCase(login.pending, (state) => {
 				state.isLoading = true;
@@ -98,16 +106,16 @@ export const authSlice = createSlice({
 			.addCase(login.fulfilled, (state, action) => {
 				state.isLoading = false;
 				state.isSuccess = true;
-				state.user = action.payload;
+				state.customer = action.payload;
 			})
 			.addCase(login.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;
-				state.user = null;
+				state.customer = null;
 			})
 			.addCase(logout.fulfilled, (state) => {
-				state.user = null;
+				state.customer = null;
 				state.isSuccess = false;
 				state.isError = false;
 				state.message = "";

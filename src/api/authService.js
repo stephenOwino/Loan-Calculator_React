@@ -4,14 +4,15 @@ import axios from "axios";
 const API_BASE_URL = "https://loan-calculator-springboot.onrender.com/api";
 
 // REGISTER
-const register = async (userData) => {
+const register = async (customerData) => {
 	try {
 		const response = await axios.post(
 			`${API_BASE_URL}/customers/register`,
-			userData
+			customerData
 		);
 		if (response.data) {
-			localStorage.setItem("user", JSON.stringify(response.data));
+			console.log("Register Response:", response.data); // Log response
+			localStorage.setItem("customer", JSON.stringify(response.data));
 			localStorage.setItem("token", response.data.token); // Save JWT token separately
 			localStorage.setItem("customerId", response.data.id); // Save customer ID separately
 		}
@@ -26,14 +27,15 @@ const register = async (userData) => {
 };
 
 // LOGIN
-const login = async (userData) => {
+const login = async (customerData) => {
 	try {
 		const response = await axios.post(
 			`${API_BASE_URL}/customers/authenticate`,
-			userData
+			customerData
 		);
 		if (response.data) {
-			localStorage.setItem("user", JSON.stringify(response.data));
+			console.log("Login Response:", response.data); // Log response
+			localStorage.setItem("customer", JSON.stringify(response.data));
 			localStorage.setItem("token", response.data.token); // Save JWT token separately
 			localStorage.setItem("customerId", response.data.id); // Save customer ID separately
 		}
@@ -49,7 +51,7 @@ const login = async (userData) => {
 
 // LOGOUT
 const logout = () => {
-	localStorage.removeItem("user");
+	localStorage.removeItem("customer");
 	localStorage.removeItem("token"); // Clear the token
 	localStorage.removeItem("customerId"); // Clear the customer ID
 };
@@ -58,6 +60,7 @@ const logout = () => {
 axios.interceptors.request.use(
 	(config) => {
 		const token = localStorage.getItem("token");
+		console.log("Interceptor Token:", token); // Log token in interceptor
 		if (token) {
 			config.headers.Authorization = `Bearer ${token}`; // Attach the token to every request
 		}

@@ -17,7 +17,7 @@ const LoginForm = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	const { user, isLoading, isError, isSuccess, message } = useSelector(
+	const { customer, isLoading, isError, isSuccess, message } = useSelector(
 		(state) => state.auth
 	);
 
@@ -33,12 +33,12 @@ const LoginForm = () => {
 			dispatch(reset());
 		}
 
-		if (isSuccess || user) {
+		if (isSuccess || customer) {
 			// Redirect after successful login
 			toast.success("Login successful!");
 			navigate("/"); // Navigate to homepage or dashboard
 		}
-	}, [user, isError, isSuccess, message, navigate, dispatch]);
+	}, [customer, isError, isSuccess, message, navigate, dispatch]);
 
 	const onSubmit = (e) => {
 		e.preventDefault();

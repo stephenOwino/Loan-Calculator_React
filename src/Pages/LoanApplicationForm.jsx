@@ -25,7 +25,7 @@ const InputField = ({ id, label, type, value, onChange, placeholder }) => (
 const LoanApplicationForm = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const { user } = useSelector((state) => state.auth);
+	const { customer } = useSelector((state) => state.auth);
 	const { loading, error } = useSelector((state) => state.loan);
 
 	const [formData, setFormData] = useState({
@@ -40,11 +40,12 @@ const LoanApplicationForm = () => {
 	});
 
 	useEffect(() => {
-		if (!user) {
+		if (!customer) {
+			// Check customer instead of user
 			navigate("/login");
 		}
 		return () => dispatch(resetLoan());
-	}, [user, dispatch, navigate]);
+	}, [customer, dispatch, navigate]); // Check customer instead of user
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
