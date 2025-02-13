@@ -151,7 +151,7 @@ const LoanCalculatorLandingPage = () => {
 					</button>
 				</form>
 				<button
-					onClick={() => navigate("/loan")}
+					onClick={() => navigate("/login")}
 					className='w-full py-3 mt-4 text-white bg-purple-600 hover:bg-purple-700 rounded-lg font-semibold focus:outline-none focus:ring-2 focus:ring-purple-500 transform transition-all duration-300 hover:scale-105'
 				>
 					Proceed to Apply for a Loan
