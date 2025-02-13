@@ -4,8 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { login, reset } from "../slices/authSlice";
 import { toast } from "react-toastify";
 import LoadingSpinner from "../spinner/LoadingSpinner";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 const LoginForm = () => {
 	const [formData, setFormData] = useState({
@@ -25,31 +24,24 @@ const LoginForm = () => {
 
 	useEffect(() => {
 		if (isError) {
-			if (message.includes("not found")) {
-				toast.error(`${message}. Please register.`);
-			} else {
-				toast.error(message);
-			}
+			toast.error(
+				message.includes("not found") ? `${message}. Please register.` : message
+			);
 			dispatch(reset());
 		}
 
 		if (isSuccess || customer) {
-			// Redirect after successful login
 			toast.success("Login successful!");
-			navigate("/"); // Navigate to homepage or dashboard
+			navigate("/"); // Redirect to homepage or dashboard
 		}
 	}, [customer, isError, isSuccess, message, navigate, dispatch]);
 
 	const onSubmit = (e) => {
 		e.preventDefault();
-
-		// Validate user input
 		if (!username || !password) {
 			toast.error("Please fill in all fields.");
 			return;
 		}
-
-		// Dispatch login action
 		dispatch(login({ username, password }));
 	};
 

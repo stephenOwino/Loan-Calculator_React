@@ -35,15 +35,9 @@ const SignupPage = () => {
 
 	useEffect(() => {
 		if (isError && message && !toast.isActive(toastErrorId)) {
-			if (message === "Username already exists") {
-				toast.error("Username already exists, choose another one", {
-					toastId: toastErrorId,
-				});
-			} else {
-				toast.error(message || "An error occurred, please try again.", {
-					toastId: toastErrorId,
-				});
-			}
+			toast.error(message || "An error occurred, please try again.", {
+				toastId: toastErrorId,
+			});
 		}
 
 		if (isSuccess && !toast.isActive(toastSuccessId)) {
