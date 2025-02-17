@@ -36,10 +36,11 @@ const SignupForm = ({ formData, onChange, onSubmit, isLoading, error }) => {
 
 	// Handle form submission
 	const handleSubmit = (e) => {
-		e.preventDefault();
-		// Perform custom form validation here if needed
+		e.preventDefault(); // Prevent default form submission
+
+		// Perform form validation and submission
 		if (isPasswordValid && isConfirmPasswordValid) {
-			onSubmit();
+			onSubmit(); // Proceed with form submission
 		}
 	};
 
