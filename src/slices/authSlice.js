@@ -1,11 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import authService from "../api/authService";
 
-// Get customer info from localStorage
+// Get customer info from localStorage (if any)
 const customer = JSON.parse(localStorage.getItem("customer"));
+const token = localStorage.getItem("token");
 
 const initialState = {
 	customer: customer ? customer : null,
+	token: token ? token : null,
 	isError: false,
 	isLoading: false,
 	isSuccess: false,
@@ -18,9 +20,9 @@ export const register = createAsyncThunk(
 	async (customer, thunkAPI) => {
 		try {
 			const response = await authService.register(customer);
-			localStorage.setItem("customer", JSON.stringify(response));
+			localStorage.setItem("customer", JSON.stringify(response)); // Store customer object
 			localStorage.setItem("token", response.token); // Store token
-			return response;
+			return response; // Return complete response to store customer and token
 		} catch (error) {
 			const message =
 				(error.response &&
@@ -40,8 +42,8 @@ export const login = createAsyncThunk(
 		try {
 			const response = await authService.login(customer);
 			localStorage.setItem("token", response.token); // Store token
-			localStorage.setItem("customerId", response.id); // Store customer ID
-			return { token: response.token, id: response.id }; // Only store token and id
+			localStorage.setItem("customer", JSON.stringify(response.customer)); // Store customer object
+			return { customer: response.customer, token: response.token }; // Return both customer and token
 		} catch (error) {
 			const message =
 				(error.response &&
@@ -58,9 +60,8 @@ export const login = createAsyncThunk(
 export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
 	try {
 		await authService.logout();
-		localStorage.removeItem("customer");
-		localStorage.removeItem("token"); // Remove token
-		localStorage.removeItem("customerId"); // Remove customer ID
+		localStorage.removeItem("customer"); // Remove customer from localStorage
+		localStorage.removeItem("token"); // Remove token from localStorage
 		return true;
 	} catch (error) {
 		const message =
@@ -91,13 +92,15 @@ export const authSlice = createSlice({
 			.addCase(register.fulfilled, (state, action) => {
 				state.isLoading = false;
 				state.isSuccess = true;
-				state.customer = action.payload;
+				state.customer = action.payload; // Store full customer object on successful registration
+				state.token = action.payload.token; // Store token from response
 			})
 			.addCase(register.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;
 				state.customer = null;
+				state.token = null; // Clear the customer and token on failure
 			})
 			.addCase(login.pending, (state) => {
 				state.isLoading = true;
@@ -105,16 +108,19 @@ export const authSlice = createSlice({
 			.addCase(login.fulfilled, (state, action) => {
 				state.isLoading = false;
 				state.isSuccess = true;
-				state.customer = { id: action.payload.id }; // Only store customer ID
+				state.customer = action.payload.customer; // Store full customer object from login
+				state.token = action.payload.token; // Store token from login response
 			})
 			.addCase(login.rejected, (state, action) => {
 				state.isLoading = false;
 				state.isError = true;
 				state.message = action.payload;
 				state.customer = null;
+				state.token = null; // Clear customer and token on failure
 			})
 			.addCase(logout.fulfilled, (state) => {
 				state.customer = null;
+				state.token = null; // Clear customer and token on logout
 				state.isSuccess = false;
 				state.isError = false;
 				state.message = "";

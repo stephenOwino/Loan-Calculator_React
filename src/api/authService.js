@@ -10,10 +10,10 @@ const register = async (customerData) => {
 			customerData
 		);
 		if (response.data) {
-			const { token, id } = response.data;
+			const { token, customerId } = response.data; // Update to customerId
 			localStorage.setItem("token", token);
-			localStorage.setItem("customerId", id);
-			return { token, id }; // Only return token and id
+			localStorage.setItem("customerId", customerId); // Store customerId
+			return { token, customerId }; // Only return token and customerId
 		}
 	} catch (error) {
 		if (error.response && error.response.data) {
@@ -32,10 +32,10 @@ const login = async (customerData) => {
 			customerData
 		);
 		if (response.data) {
-			const { token, id } = response.data;
+			const { token, customerId } = response.data; // Update to customerId
 			localStorage.setItem("token", token);
-			localStorage.setItem("customerId", id);
-			return { token, id }; // Only return token and id
+			localStorage.setItem("customerId", customerId); // Store customerId
+			return { token, customerId }; // Only return token and customerId
 		}
 	} catch (error) {
 		if (error.response && error.response.data) {
