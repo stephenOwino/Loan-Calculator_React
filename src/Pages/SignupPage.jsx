@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { FaUser } from "react-icons/fa";
 import LoadingSpinner from "../spinner/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
+import SignupForm from "../Components/SignupForm";
 
 const SignupPage = () => {
 	const navigate = useNavigate();
