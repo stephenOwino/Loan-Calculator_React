@@ -1,3 +1,10 @@
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { register, reset } from "../slices/authSlice";
+import { toast } from "react-toastify";
+import { FaUser } from "react-icons/fa";
+import LoadingSpinner from "../spinner/LoadingSpinner";
+
 const SignupPage = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
