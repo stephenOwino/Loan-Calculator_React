@@ -1,8 +1,18 @@
-// LoginPage.js
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import LoginForm from "../Components/Login";
 import { FaUserAlt } from "react-icons/fa";
 
 const LoginPage = () => {
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		// Check if a token exists in localStorage (meaning the user is already logged in)
+		if (localStorage.getItem("token")) {
+			navigate("/"); // Redirect to home page if already logged in
+		}
+	}, [navigate]);
+
 	return (
 		<div className='flex items-center justify-center min-h-screen bg-gray-100 px-4 sm:px-6 lg:px-8'>
 			<section className='bg-white shadow-lg rounded-lg p-8 w-full max-w-md sm:max-w-lg'>

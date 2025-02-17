@@ -31,12 +31,12 @@ const LoginForm = () => {
 		}
 
 		if (isSuccess || customer) {
-			// Save the JWT token in localStorage
+			// Save the JWT token in localStorage after successful login
 			if (customer && customer.token) {
 				localStorage.setItem("token", customer.token); // Save token in localStorage
 			}
 			toast.success("Login successful!");
-			navigate("/"); // Redirect to homepage or dashboard
+			navigate("/"); // Redirect to homepage after successful login
 		}
 	}, [customer, isError, isSuccess, message, navigate, dispatch]);
 

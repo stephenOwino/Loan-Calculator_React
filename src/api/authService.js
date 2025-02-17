@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useNavigate } from "react-router-dom"; // Use useNavigate for redirection
 
 const API_BASE_URL = "https://loan-calculator-springboot.onrender.com/api";
 
@@ -10,10 +11,10 @@ const register = async (customerData) => {
 			customerData
 		);
 		if (response.data) {
-			const { token, customerId } = response.data; // Update to customerId
+			const { token, customerId } = response.data;
 			localStorage.setItem("token", token);
-			localStorage.setItem("customerId", customerId); // Store customerId
-			return { token, customerId }; // Only return token and customerId
+			localStorage.setItem("customerId", customerId);
+			return { token, customerId };
 		}
 	} catch (error) {
 		if (error.response && error.response.data) {
@@ -32,10 +33,10 @@ const login = async (customerData) => {
 			customerData
 		);
 		if (response.data) {
-			const { token, customerId } = response.data; // Update to customerId
+			const { token, customerId } = response.data;
 			localStorage.setItem("token", token);
-			localStorage.setItem("customerId", customerId); // Store customerId
-			return { token, customerId }; // Only return token and customerId
+			localStorage.setItem("customerId", customerId);
+			return { token, customerId };
 		}
 	} catch (error) {
 		if (error.response && error.response.data) {
@@ -62,6 +63,26 @@ axios.interceptors.request.use(
 		return config;
 	},
 	(error) => {
+		return Promise.reject(error);
+	}
+);
+
+// Response Interceptor to handle expired tokens
+axios.interceptors.response.use(
+	(response) => response, // Return response if no error
+	(error) => {
+		if (error.response && error.response.status === 401) {
+			// Token expired or invalid
+			localStorage.removeItem("token");
+			localStorage.removeItem("customerId");
+
+			// You can use a navigate hook here to redirect to the homepage
+			const navigate = useNavigate(); // You need this hook to redirect the user
+			navigate("/"); // Redirect to the homepage after token expiration
+
+			// Optionally, show a notification (e.g., with a toast)
+			toast.error("Session expired. Please log in again.");
+		}
 		return Promise.reject(error);
 	}
 );
