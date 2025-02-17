@@ -84,6 +84,13 @@ const LoanApplicationForm = () => {
 		e.preventDefault();
 		if (!validateForm()) return;
 
+		const token = localStorage.getItem("token");
+		if (!token) {
+			toast.error("You need to be logged in to apply for a loan.");
+			navigate("/login");
+			return;
+		}
+
 		try {
 			// Apply for loan by dispatching the action with formData
 			await dispatch(applyForLoan(formData));
