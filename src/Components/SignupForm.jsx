@@ -1,22 +1,50 @@
-// SignupForm.js
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
-const SignupForm = ({ formData, onChange, onSubmit, isLoading }) => {
+const SignupForm = ({ formData, onChange, onSubmit, isLoading, error }) => {
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+	const [isPasswordValid, setIsPasswordValid] = useState(true);
+	const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(true);
+	const navigate = useNavigate();
 
+	// Toggle password visibility
 	const togglePasswordVisibility = () => {
 		setShowPassword(!showPassword);
 	};
 
+	// Toggle confirm password visibility
 	const toggleConfirmPasswordVisibility = () => {
 		setShowConfirmPassword(!showConfirmPassword);
 	};
 
+	// Check if passwords match (for confirm password validation)
+	useEffect(() => {
+		if (formData.password !== formData.confirmPassword) {
+			setIsConfirmPasswordValid(false);
+		} else {
+			setIsConfirmPasswordValid(true);
+		}
+	}, [formData.password, formData.confirmPassword]);
+
+	// Check if password is strong enough
+	useEffect(() => {
+		const isValid = formData.password.length >= 6;
+		setIsPasswordValid(isValid);
+	}, [formData.password]);
+
+	// Handle form submission
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		// Perform custom form validation here if needed
+		if (isPasswordValid && isConfirmPasswordValid) {
+			onSubmit();
+		}
+	};
+
 	return (
-		<form onSubmit={onSubmit} className='w-full space-y-6'>
+		<form onSubmit={handleSubmit} className='w-full space-y-6'>
 			{/* First Name */}
 			<div className='flex flex-col w-full'>
 				<label htmlFor='firstName' className='text-left mb-2 font-medium'>
@@ -94,7 +122,9 @@ const SignupForm = ({ formData, onChange, onSubmit, isLoading }) => {
 						placeholder='Enter your password'
 						value={formData.password}
 						onChange={onChange}
-						className='border rounded-md p-3 w-full focus:border-blue-500 focus:ring-blue-500'
+						className={`border rounded-md p-3 w-full focus:border-blue-500 focus:ring-blue-500 ${
+							!isPasswordValid ? "border-red-500" : ""
+						}`}
 					/>
 					<div
 						className='absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer'
@@ -107,6 +137,11 @@ const SignupForm = ({ formData, onChange, onSubmit, isLoading }) => {
 						)}
 					</div>
 				</div>
+				{!isPasswordValid && (
+					<p className='text-red-500 text-sm'>
+						Password must be at least 6 characters long.
+					</p>
+				)}
 			</div>
 
 			{/* Confirm Password */}
@@ -122,7 +157,9 @@ const SignupForm = ({ formData, onChange, onSubmit, isLoading }) => {
 						placeholder='Confirm your password'
 						value={formData.confirmPassword}
 						onChange={onChange}
-						className='border rounded-md p-3 w-full focus:border-blue-500 focus:ring-blue-500'
+						className={`border rounded-md p-3 w-full focus:border-blue-500 focus:ring-blue-500 ${
+							!isConfirmPasswordValid ? "border-red-500" : ""
+						}`}
 					/>
 					<div
 						className='absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer'
@@ -135,6 +172,9 @@ const SignupForm = ({ formData, onChange, onSubmit, isLoading }) => {
 						)}
 					</div>
 				</div>
+				{!isConfirmPasswordValid && (
+					<p className='text-red-500 text-sm'>Passwords do not match.</p>
+				)}
 			</div>
 
 			{/* Submit Button */}
@@ -144,11 +184,14 @@ const SignupForm = ({ formData, onChange, onSubmit, isLoading }) => {
 					className={`bg-blue-600 text-white w-full py-3 rounded-md hover:bg-blue-700 ${
 						isLoading ? "cursor-not-allowed opacity-50" : ""
 					}`}
-					disabled={isLoading}
+					disabled={isLoading || !isPasswordValid || !isConfirmPasswordValid}
 				>
 					{isLoading ? "Loading..." : "Sign Up"}
 				</button>
 			</div>
+
+			{/* Error message */}
+			{error && <div className='text-red-500 mt-4 text-center'>{error}</div>}
 
 			{/* Login Link */}
 			<div className='flex justify-end mt-6'>

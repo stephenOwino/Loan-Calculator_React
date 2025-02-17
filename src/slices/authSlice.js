@@ -22,7 +22,7 @@ export const register = createAsyncThunk(
 			const response = await authService.register(customer);
 			localStorage.setItem("customer", JSON.stringify(response)); // Store customer object
 			localStorage.setItem("token", response.token); // Store token
-			return response; // Return complete response to store customer and token
+			return { customer: response, token: response.token }; // Return customer and token
 		} catch (error) {
 			const message =
 				(error.response &&
@@ -43,7 +43,7 @@ export const login = createAsyncThunk(
 			const response = await authService.login(customer);
 			localStorage.setItem("token", response.token); // Store token
 			localStorage.setItem("customer", JSON.stringify(response.customer)); // Store customer object
-			return { customer: response.customer, token: response.token }; // Return both customer and token
+			return { customer: response.customer, token: response.token }; // Return customer and token
 		} catch (error) {
 			const message =
 				(error.response &&
@@ -86,14 +86,15 @@ export const authSlice = createSlice({
 	},
 	extraReducers: (builder) => {
 		builder
+			// Register cases
 			.addCase(register.pending, (state) => {
 				state.isLoading = true;
 			})
 			.addCase(register.fulfilled, (state, action) => {
 				state.isLoading = false;
 				state.isSuccess = true;
-				state.customer = action.payload; // Store full customer object on successful registration
-				state.token = action.payload.token; // Store token from response
+				state.customer = action.payload.customer; // Store customer object
+				state.token = action.payload.token; // Store token
 			})
 			.addCase(register.rejected, (state, action) => {
 				state.isLoading = false;
@@ -102,13 +103,15 @@ export const authSlice = createSlice({
 				state.customer = null;
 				state.token = null; // Clear the customer and token on failure
 			})
+
+			// Login cases
 			.addCase(login.pending, (state) => {
 				state.isLoading = true;
 			})
 			.addCase(login.fulfilled, (state, action) => {
 				state.isLoading = false;
 				state.isSuccess = true;
-				state.customer = action.payload.customer; // Store full customer object from login
+				state.customer = action.payload.customer; // Store customer object
 				state.token = action.payload.token; // Store token from login response
 			})
 			.addCase(login.rejected, (state, action) => {
@@ -118,6 +121,8 @@ export const authSlice = createSlice({
 				state.customer = null;
 				state.token = null; // Clear customer and token on failure
 			})
+
+			// Logout cases
 			.addCase(logout.fulfilled, (state) => {
 				state.customer = null;
 				state.token = null; // Clear customer and token on logout

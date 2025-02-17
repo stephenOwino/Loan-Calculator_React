@@ -1,4 +1,3 @@
-// LoginForm.js
 import { useState, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
@@ -32,6 +31,10 @@ const LoginForm = () => {
 		}
 
 		if (isSuccess || customer) {
+			// Save the JWT token in localStorage
+			if (customer && customer.token) {
+				localStorage.setItem("token", customer.token); // Save token in localStorage
+			}
 			toast.success("Login successful!");
 			navigate("/"); // Redirect to homepage or dashboard
 		}

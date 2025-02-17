@@ -11,6 +11,7 @@ const SignupPage = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
+	// Retrieve stored form data from localStorage or initialize as empty fields
 	const storedFormData = JSON.parse(localStorage.getItem("formData")) || {
 		firstName: "",
 		lastName: "",
@@ -26,6 +27,7 @@ const SignupPage = () => {
 	const { firstName, lastName, username, email, password, confirmPassword } =
 		formData;
 
+	// Redux state to manage registration state
 	const { user, isLoading, isError, isSuccess, message } = useSelector(
 		(state) => state.auth
 	);
@@ -33,6 +35,7 @@ const SignupPage = () => {
 	const toastErrorId = "toast-error-id";
 	const toastSuccessId = "toast-success-id";
 
+	// Effect to handle success or error messages from the redux state
 	useEffect(() => {
 		if (isError && message && !toast.isActive(toastErrorId)) {
 			toast.error(message || "An error occurred, please try again.", {
@@ -43,6 +46,7 @@ const SignupPage = () => {
 		if (isSuccess && !toast.isActive(toastSuccessId)) {
 			toast.success("Registration successful!", { toastId: toastSuccessId });
 
+			// Clear form data and remove it from localStorage
 			setFormData({
 				firstName: "",
 				lastName: "",
@@ -53,16 +57,20 @@ const SignupPage = () => {
 			});
 			localStorage.removeItem("formData");
 
+			// Set redirect flag to true to show redirect spinner
 			setRedirecting(true);
 
+			// Redirect after 2 seconds
 			setTimeout(() => {
 				navigate("/login");
 			}, 2000);
 		}
 
+		// Reset the auth state on page load
 		dispatch(reset());
 	}, [user, isError, isSuccess, message, navigate, dispatch]);
 
+	// Handle form field change
 	const onChange = (e) => {
 		const updatedFormData = {
 			...formData,
@@ -72,9 +80,11 @@ const SignupPage = () => {
 		localStorage.setItem("formData", JSON.stringify(updatedFormData));
 	};
 
+	// Handle form submission
 	const onSubmit = (e) => {
 		e.preventDefault();
 
+		// Basic validation for required fields
 		if (
 			!firstName ||
 			!lastName ||
@@ -89,6 +99,7 @@ const SignupPage = () => {
 			return;
 		}
 
+		// Password match validation
 		if (password !== confirmPassword) {
 			if (!toast.isActive(toastErrorId)) {
 				toast.error("Passwords do not match!", { toastId: toastErrorId });
@@ -96,10 +107,12 @@ const SignupPage = () => {
 			return;
 		}
 
+		// Dispatch registration action
 		const userData = { firstName, lastName, username, email, password };
 		dispatch(register(userData));
 	};
 
+	// If loading or redirecting, show spinner
 	if (isLoading || redirecting) {
 		return (
 			<div className='flex items-center justify-center min-h-screen'>
@@ -113,6 +126,7 @@ const SignupPage = () => {
 		);
 	}
 
+	// Normal Signup Page View
 	return (
 		<div className='flex items-center justify-center px-4 sm:px-6 lg:px-8 mt-40'>
 			<section className='flex flex-col items-center space-y-4 text-center p-6 bg-white shadow-xl rounded-2xl w-full max-w-md sm:max-w-lg'>
