@@ -1,3 +1,4 @@
+// LoginForm.js
 import { useState, useEffect } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useSelector, useDispatch } from "react-redux";
@@ -23,7 +24,7 @@ const LoginForm = () => {
 	const { username, password } = formData;
 
 	useEffect(() => {
-		if (isError) {
+		if (isError && message) {
 			toast.error(
 				message.includes("not found") ? `${message}. Please register.` : message
 			);

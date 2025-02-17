@@ -33,12 +33,12 @@ const Navbar = ({ contrast }) => {
 		{ name: "Contact Us", path: "#contact-us" },
 	];
 
-	const onLogout = () => {
+	const onLogout = async () => {
 		setIsLoggingOut(true);
-		dispatch(logout());
+		await dispatch(logout());
 		dispatch(reset());
-		navigate("/");
 		setIsLoggingOut(false);
+		navigate("/");
 	};
 
 	useEffect(() => {
@@ -209,7 +209,15 @@ const Sidebar = ({ isOpen, toggleSidebar, onLogout }) => {
 							{page.name}
 						</Link>
 					))}
-					{!user ? (
+					{user ? (
+						<Link
+							to='/logout'
+							className='flex items-center hover:underline'
+							onClick={onLogout}
+						>
+							<FaSignOutAlt className='mr-2' /> Logout
+						</Link>
+					) : (
 						<>
 							<Link
 								to='/register'
@@ -221,14 +229,6 @@ const Sidebar = ({ isOpen, toggleSidebar, onLogout }) => {
 								<FaSignInAlt className='mr-2' /> Login
 							</Link>
 						</>
-					) : (
-						<Link
-							to='/logout'
-							className='flex items-center hover:underline'
-							onClick={onLogout}
-						>
-							<FaSignOutAlt className='mr-2' /> Logout
-						</Link>
 					)}
 				</nav>
 			</div>

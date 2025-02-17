@@ -106,7 +106,7 @@ const SignupPage = () => {
 				<LoadingSpinner />
 				{redirecting && (
 					<p className='text-center text-lg font-semibold mt-4'>
-						Now you can login...
+						Now you can log in...
 					</p>
 				)}
 			</div>
