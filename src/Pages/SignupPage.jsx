@@ -4,6 +4,7 @@ import { register, reset } from "../slices/authSlice";
 import { toast } from "react-toastify";
 import { FaUser } from "react-icons/fa";
 import LoadingSpinner from "../spinner/LoadingSpinner";
+import { useNavigate } from "react-router-dom";
 
 const SignupPage = () => {
 	const navigate = useNavigate();
