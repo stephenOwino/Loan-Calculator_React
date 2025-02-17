@@ -7,6 +7,7 @@ const SignupForm = ({ formData, onChange, onSubmit, isLoading, error }) => {
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 	const [isPasswordValid, setIsPasswordValid] = useState(true);
 	const [isConfirmPasswordValid, setIsConfirmPasswordValid] = useState(true);
+
 	const navigate = useNavigate();
 
 	// Toggle password visibility
@@ -38,9 +39,9 @@ const SignupForm = ({ formData, onChange, onSubmit, isLoading, error }) => {
 	const handleSubmit = (e) => {
 		e.preventDefault(); // Prevent default form submission
 
-		// Perform form validation and submission
+		// Check if passwords are valid and proceed with submission
 		if (isPasswordValid && isConfirmPasswordValid) {
-			onSubmit(); // Proceed with form submission
+			onSubmit(); // Trigger onSubmit function passed from the parent
 		}
 	};
 

@@ -11,6 +11,7 @@ const SignupPage = () => {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
+	// Load stored form data from localStorage or set initial values
 	const storedFormData = JSON.parse(localStorage.getItem("formData")) || {
 		firstName: "",
 		lastName: "",
@@ -26,10 +27,12 @@ const SignupPage = () => {
 	const { firstName, lastName, username, email, password, confirmPassword } =
 		formData;
 
+	// Getting the state from the Redux store
 	const { user, isLoading, isError, isSuccess, message } = useSelector(
 		(state) => state.auth
 	);
 
+	// Toast configuration
 	const toastErrorId = "toast-error-id";
 	const toastSuccessId = "toast-success-id";
 
@@ -54,25 +57,28 @@ const SignupPage = () => {
 
 			setRedirecting(true);
 			setTimeout(() => {
-				navigate("/login");
+				navigate("/login"); // Redirect to login page after registration
 			}, 2000);
 		}
 
-		dispatch(reset());
+		dispatch(reset()); // Reset auth state after action is complete
 	}, [user, isError, isSuccess, message, navigate, dispatch]);
 
+	// Handle form data changes
 	const onChange = (e) => {
 		const updatedFormData = {
 			...formData,
 			[e.target.name]: e.target.value,
 		};
 		setFormData(updatedFormData);
-		localStorage.setItem("formData", JSON.stringify(updatedFormData));
+		localStorage.setItem("formData", JSON.stringify(updatedFormData)); // Store updated form data in localStorage
 	};
 
+	// Handle form submission
 	const onSubmit = (e) => {
 		e.preventDefault();
 
+		// Check if all fields are filled
 		if (
 			!firstName ||
 			!lastName ||
@@ -87,6 +93,7 @@ const SignupPage = () => {
 			return;
 		}
 
+		// Check if passwords match
 		if (password !== confirmPassword) {
 			if (!toast.isActive(toastErrorId)) {
 				toast.error("Passwords do not match!", { toastId: toastErrorId });
@@ -94,10 +101,12 @@ const SignupPage = () => {
 			return;
 		}
 
+		// Dispatch register action to Redux store
 		const userData = { firstName, lastName, username, email, password };
 		dispatch(register(userData));
 	};
 
+	// Loading or redirecting state
 	if (isLoading || redirecting) {
 		return (
 			<div className='flex items-center justify-center min-h-screen'>
@@ -121,8 +130,9 @@ const SignupPage = () => {
 				<SignupForm
 					formData={formData}
 					onChange={onChange}
-					onSubmit={onSubmit} // Pass onSubmit as a function
+					onSubmit={onSubmit} // Pass the onSubmit handler to SignupForm
 					isLoading={isLoading}
+					error={message}
 				/>
 			</section>
 		</div>
