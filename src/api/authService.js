@@ -11,10 +11,11 @@ const register = async (customerData) => {
 			customerData
 		);
 		if (response.data) {
-			const { token, customerId } = response.data;
+			const { token, customerId, customer } = response.data; // Extract token and customer data
 			localStorage.setItem("token", token);
 			localStorage.setItem("customerId", customerId);
-			return { token, customerId };
+			localStorage.setItem("customer", JSON.stringify(customer)); // Store full customer object
+			return { token, customer }; // Return both token and customer
 		}
 	} catch (error) {
 		if (error.response && error.response.data) {
@@ -33,10 +34,11 @@ const login = async (customerData) => {
 			customerData
 		);
 		if (response.data) {
-			const { token, customerId } = response.data;
+			const { token, customerId, customer } = response.data; // Include customer data along with token
 			localStorage.setItem("token", token);
 			localStorage.setItem("customerId", customerId);
-			return { token, customerId };
+			localStorage.setItem("customer", JSON.stringify(customer)); // Store full customer object
+			return { token, customer }; // Return both token and customer
 		}
 	} catch (error) {
 		if (error.response && error.response.data) {
@@ -51,6 +53,7 @@ const login = async (customerData) => {
 const logout = () => {
 	localStorage.removeItem("token");
 	localStorage.removeItem("customerId");
+	localStorage.removeItem("customer");
 };
 
 // Automatically attach JWT token to axios requests

@@ -20,9 +20,9 @@ export const register = createAsyncThunk(
 	async (customer, thunkAPI) => {
 		try {
 			const response = await authService.register(customer);
-			localStorage.setItem("customer", JSON.stringify(response)); // Store customer object
+			localStorage.setItem("customer", JSON.stringify(response.customer)); // Store customer object
 			localStorage.setItem("token", response.token); // Store token
-			return { customer: response, token: response.token }; // Return customer and token
+			return { customer: response.customer, token: response.token }; // Return customer and token
 		} catch (error) {
 			const message =
 				(error.response &&
@@ -41,8 +41,8 @@ export const login = createAsyncThunk(
 	async (customer, thunkAPI) => {
 		try {
 			const response = await authService.login(customer);
+			localStorage.setItem("customer", JSON.stringify(response.customer)); // Store full customer object
 			localStorage.setItem("token", response.token); // Store token
-			localStorage.setItem("customer", JSON.stringify(response.customer)); // Store customer object
 			return { customer: response.customer, token: response.token }; // Return customer and token
 		} catch (error) {
 			const message =
@@ -94,7 +94,7 @@ export const authSlice = createSlice({
 				state.isLoading = false;
 				state.isSuccess = true;
 				state.customer = action.payload.customer; // Store customer object
-				state.token = action.payload.token; // Store token
+				state.token = action.payload.token; // Store token from login response
 			})
 			.addCase(register.rejected, (state, action) => {
 				state.isLoading = false;
