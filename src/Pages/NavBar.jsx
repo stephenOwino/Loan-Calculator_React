@@ -21,7 +21,7 @@ const Navbar = ({ contrast }) => {
 	const [suggestions, setSuggestions] = useState([]);
 	const [isLoggingOut, setIsLoggingOut] = useState(false);
 	const dispatch = useDispatch();
-	const { user } = useSelector((state) => state.auth);
+	const { user } = useSelector((state) => state.auth); // Assuming user is part of auth slice
 	const navigate = useNavigate();
 
 	const pages = [
@@ -134,6 +134,7 @@ const Navbar = ({ contrast }) => {
 							{page.name}
 						</Link>
 					))}
+					{/* If user is logged in, show Logout */}
 					{user ? (
 						<Link
 							to='/logout'
@@ -143,6 +144,7 @@ const Navbar = ({ contrast }) => {
 							<FaSignOutAlt className='mr-1' /> Logout
 						</Link>
 					) : (
+						// If user is not logged in, show Register and Login
 						<>
 							<Link
 								to='/register'
