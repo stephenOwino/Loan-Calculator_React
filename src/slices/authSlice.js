@@ -1,13 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import authService from "../api/authService";
 
-// Get customer info from localStorage (if any)
+// Get customer from localStorage
 const customer = localStorage.getItem("customer");
-const token = localStorage.getItem("token");
+// Add a check to parse the customer object only if it exists
+const parsedCustomer = customer ? JSON.parse(customer) : null;
 
 const initialState = {
-	customer: customer ? JSON.parse(customer) : null,
-	token: token ? token : null,
+	customer: parsedCustomer, // Use parsedCustomer here
+	token: localStorage.getItem("token"),
 	isError: false,
 	isLoading: false,
 	isSuccess: false,

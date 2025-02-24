@@ -80,7 +80,7 @@ axios.interceptors.response.use(
 			localStorage.removeItem("customerId");
 
 			// You can use a navigate hook here to redirect to the homepage
-			const navigate = useNavigate(); // You need this hook to redirect the user
+			const navigate = useNavigate(); // You need this hook to redirect the customer
 			navigate("/"); // Redirect to the homepage after token expiration
 
 			// Optionally, show a notification (e.g., with a toast)
