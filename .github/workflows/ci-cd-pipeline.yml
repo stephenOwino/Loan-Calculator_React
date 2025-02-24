@@ -21,32 +21,47 @@ jobs:
         with:
           node-version: "18"
 
-      # Step 3: Install dependencies with --legacy-peer-deps flag to avoid peer dependency issues
+      # Step 3: Cache node_modules to speed up the install process
+      - name: Cache Node modules
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-modules-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-modules-
+
+      # Step 4: Install dependencies with --legacy-peer-deps flag to avoid peer dependency issues
       - name: Install dependencies
         run: npm install --legacy-peer-deps
 
-      # Step 4: Build the app using Vite (or your build tool)
+      # Step 5: Run tests before building the app (optional but recommended)
+      - name: Run Tests
+        run: npm test
+
+      # Step 6: Build the app using Vite (or your build tool)
       - name: Build the app
         run: npm run build
 
-      # Step 5: Build Docker image and tag it with your Docker Hub username
+      # Step 7: Build Docker image and tag it with your Docker Hub username
       - name: Build Docker image
         run: |
           docker build -t otizaaa/loan-calculator-app:latest .
+          docker tag otizaaa/loan-calculator-app:latest otizaaa/loan-calculator-app:${{ github.sha }}
 
-      # Step 6: Log in to Docker Hub (you need to store your Docker credentials as secrets)
+      # Step 8: Log in to Docker Hub (you need to store your Docker credentials as secrets)
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKER_USERNAME }} # Docker Hub username stored in GitHub Secrets
           password: ${{ secrets.DOCKER_PASSWORD }} # Docker Hub password stored in GitHub Secrets
 
-      # Step 7: Push Docker image to Docker Hub
+      # Step 9: Push Docker image to Docker Hub (both latest and commit SHA tagged images)
       - name: Push Docker image to Docker Hub
         run: |
           docker push otizaaa/loan-calculator-app:latest
+          docker push otizaaa/loan-calculator-app:${{ github.sha }}
 
-      # Step 8: Deploy to Render
+      # Step 10: Deploy to Render (optional step for deployment)
       - name: Deploy to Render
         run: |
           curl -X POST https://api.render.com/v1/services/${{ secrets.RENDER_SERVICE_ID }}/deploy \
