@@ -15,15 +15,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Step 2: Set up Node.js (we're using Node.js 16 in this example)
+      # Step 2: Set up Node.js (we're using Node.js 18 in this example)
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: "18"
 
-      # Step 3: Install dependencies
+      # Step 3: Install dependencies with --legacy-peer-deps flag to avoid peer dependency issues
       - name: Install dependencies
-        run: npm install
+        run: npm install --legacy-peer-deps
 
       # Step 4: Build the app using Vite (or your build tool)
       - name: Build the app
